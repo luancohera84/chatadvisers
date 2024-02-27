@@ -1,0 +1,22 @@
+<div class="card-body">
+    <div class="row">
+        <div class="col col-lg-6">
+            <label class="col-form-label">Estado envío</label>
+            <select name="statusSend" id="statusSend" class="form-control">
+                {{ for st in status :}}
+                    {{ if st == infoInstancia[0]['status_send'] :}}
+                        {{selected = 'selected'}}
+                    {{else:}}
+                        {{selected = ''}}
+                    {{pass}}
+                    <option value="{{=st}}" {{=selected}}>{{=st}}</option>
+                {{pass}}
+            </select>
+        </div>
+        <div class="col col-lg-6">
+            <label class="col-form-label">Intensidad diaria</label>
+            <input type="text" name="numInstancia" id="numInstancia" class="form-control" placeholder="Número instancia" value="{{=infoInstancia[0]['intensidad'] or 0}}">
+        </div>
+    </div>
+    <input type="hidden" id="idInstance" name="idInstance" value="{{=infoInstancia[0]['idInstance']}}">
+</div>

@@ -1,0 +1,62 @@
+<!-- NavBar inicial -->
+<div class="sidebar-group left-sidebar chat_sidebar">
+
+    <div id="chats" class="left-sidebar-wrap sidebar active slimscroll">
+        <div class="slimscroll">
+            <div class="left-chat-title d-flex justify-content-between align-items-center">
+                <div class="chat-title">
+                    <h6>Listado chats {{=varDatos.nombreEmpresa}}</h6>
+                </div>
+            </div>
+            <div class="search_chat has-search">
+                <span class="fas fa-search form-control-feedback"></span>
+                <input class="form-control chat_input" id="search-contacts" type="text" placeholder="Buscar chat">
+            </div>
+            <div class="sidebar-body" id="chatsidebar">
+                <div class="left-chat-title d-flex justify-content-between align-items-center ps-0 pe-0" style="margin-top:-30px;">
+                </div>
+                <ul class="user-list mt-2">
+                    {{ if len(listadoClientesChat) > 0 :}}
+                        {{ for infCl in listadoClientesChat :}}
+                            <li class="user-list-item"  onclick="ases.verInfoChatCliente(1,1,'{{=varDatos.idEmpresa}}','{{=varDatos.idUser}}');">
+                                <div>
+                                    <div class="avatar avatar-online">
+                                        <div class="letter-avatar">
+                                            {{=str(infCl.Nombre).capitalize()[:1]}}{{=str(infCl.surname).capitalize()[:1]}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="users-list-body">
+                                    <div>
+                                        <h5> {{=str(infCl.name).capitalize()}} {{=str(infCl.surname).capitalize()}}</h5>
+                                        <p><span class="material-icons">call</span>  {{=infCl.telefono}}</p>
+                                    </div>
+                                    <div class="last-chat-time">
+                                        <small class="text-muted">05 min</small>
+                                        <div class="new-message-count">11</div>
+                                    </div>
+                                </div>
+                            </li>
+                        {{pass}}
+                    {{else:}}
+                        <li class="user-list-item">
+                            <div>
+                                <div class="avatar avatar-offline">
+                                    <div class="letter-avatar">
+                                        N
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="users-list-body">
+                                <div>
+                                    <h6>No encontramos chats para esta empresa</h6>
+                                    <p><span class="material-icons">check_circle</span>  {{=str(request.now)[:16]}}</p>
+                                </div>
+                            </div>
+                        </li>
+                    {{pass}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

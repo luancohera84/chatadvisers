@@ -1,0 +1,170 @@
+<div class="card card-custom example example-compact">
+    <div class="card-header modeleCreateOne" id="idHeaderPasoOne">
+        <div class="izquierdaFloat">
+            <h6 style="margin-top:5px;color:#FFFFFF !important;">Crear contexto</h6>
+        </div>
+        <div class="derechaFloat">
+            <a href="javascript:chatBot.regresarNewContBot();" class="btn btn-icon btn-primary" id="btnRegresoListadoNodos">
+                <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+            </a>
+            <a href="javascript:chatBot.showPasoToPaso();" class="btn btn-icon btn-primary">
+                <i class="fas fa-info-circle text-while" style="font-size:17px;"></i>
+            </a>
+            <a href="{{=URL('default','emojis')}}" target="_blank" class="btn btn-icon btn-primary">
+                <i class="far fa-meh-rolling-eyes text-while" style="font-size:17px;"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body modeleCreateOne">
+        <div class="row">
+            <div class="col col-lg-12">
+                <label class="col-form-label col-3">Nombre contexto</label>
+                <input 
+                    id="nomContexto"
+                    type="text" 
+                    class="form-control inputLowe col-9r" 
+                    placeholder="Nombre contexto"  
+                    autocomplete="false" 
+                    onpaste="Swal.fire('Error','No puedes pegar','error');return false">
+            </div>
+            <div class="col col-lg-12 mb-3" style="margin-top:15px !important;">
+                <p class="textOfertaViews" align="justify">Selecciones los nodos que requiere.</p>
+                <hr>
+                <div class="member-details" style="margin-top:-5px;">
+                    
+                    {{if len(listadoNomNodos) > 0:}}
+                        <ul class="user-list mt-2" style="height:200px; overflow-y: auto;">
+                            <div class="row">
+                                {{for nomN in listadoNomNodos:}}
+                                    <div class="col-3">
+                                        <li class="cardTipi" onclick="chatBot.selNombresNodos('{{=data.idSegmento}}','{{=nomN.nombre_nodos_nombre}}','{{=nomN.nombre_nodos_tipo}}','{{=nomN.id}}');" id="nomNodoLi_{{=nomN.id}}">
+                                            <div class="users-list-body">
+                                                <h6 class="textOfertaViews">{{=str(nomN.nombre_nodos_nombre).replace('_',' ').capitalize()}}</h6>
+                                            </div>
+                                        </li>
+                                    </div>
+                                {{pass}}
+                            </div>
+                        </ul>
+                    {{else:}}
+                        <p class="text-center text-dark">Es estos momentos no hay nodos creados. Contactar a soporte</p>
+                    {{pass}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer modeleCreateOne">
+        <div class="derechaFloat">
+            <a href="javascript:chatBot.configNodosInicioDes();" class="btn btn-icon btn-primary disabled" id="btnSiguieNombreNodo">
+                <i class="fas fa-arrow-right text-while" style="font-size:17px;"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-header modeleConfigNodoIniciodespedida hide">
+        <div class="izquierdaFloat">
+            <h6 style="margin-top:5px;color:#FFFFFF !important;">Configurar nodos inicio/despedida</h6>
+        </div>
+        <div class="derechaFloat">
+            <a href="javascript:$('.modeleConfigNodoIniciodespedida').hide();$('.modeleCreateOne').show();" class="btn btn-icon btn-primary">
+                <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+            </a>
+            <a href="javascript:chatBot.siguienteNodosAdicionales();" class="btn btn-icon btn-primary" id="btnSiguieNodosAdicionales">
+                <i class="fas fa-arrow-right text-while" style="font-size:17px;"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body modeleConfigNodoIniciodespedida hide">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col recuadro">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Nodo inicio</h5>
+                        <textarea id="mensajeInicio" class="form-control mb-3" cols="30" placeholder="Mensaje" value='Mensje inicial' rows="4">Bienvenido  <url> <fecha1> , <Nombre> en Intelibpo estamos felices de atenderte. Soy tu agente virtual y te guiara paso a paso para que puedas conocer mas de nosotros.Para poder continuar por favor confirmanos si podemos seguir en comunicacion por este medio?<salto>Marca:<salto> [<0031-20E3>]  Para autorizar .<salto> [<0032-20E3>]  Para NO autorizar y finalizar el chat</textarea>
+                        <textarea id="mensajeErrorInicio" class="form-control mb-3" placeholder="Mensaje error" value='Mensje Error inicial' cols="30" rows="2">Por favor marque una opcion valida [<0031-20E3>] o [<0032-20E3>]</textarea>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckInicio">
+                          <label class="form-check-label" for="flexSwitchCheckInicio">Directo</label>
+                        </div>
+                        <div>
+                            <p  class="mb-3">Opciones  
+                                <i class="fa fa-plus cursor" onclick="chatBot.opcionesNodos('inicio');" id="iIdOpcionesInicio"></i>
+                                <p id="divIdOpcionesNodosInicio"></p>
+                            </p>
+                        </div>
+                        <select name="tipoChatNodoInicio" id="tipoChatNodoInicio" class="form-control mb-3">
+                            <option value="">Seleccione un tipo</option>
+                            <option value="chat">Texto</option>
+                            <option value="imagen">Imagen</option>
+                        </select>
+                        
+                        <select name="resultadoNodoInicio" id="resultadoNodoInicio" class="form-control mb-3">
+                            <option value="">Seleccione un resultado</option>
+                            {{for resNodo in listadoRusltados:}}
+                                <option value="{{=resNodo['idResultado']}}">{{=resNodo['idResultado']}} - {{=str(resNodo['descripcion']).capitalize()}}</option>
+                            {{pass}}
+                        </select>
+                    </div>
+                    <div class="card-footer">
+                        <div class="derechaFloat">
+                            <a href="javascript:chatBot.guardarNodo('inicio');" class="btn btn-icon btn-success" id="btnIdGuardarNodoInicio">
+                                <i class="fa fa-save"></i>
+                            </a>
+                            <a href="javascript:chatBot.editarNodo('inicio');" class="btn btn-icon btn-primary hide" id="btnIdEditaNodoInicio">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col recuadro">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Nodo despedida</h5>
+                        <textarea id="mensajeDespedida" class="form-control mb-3" cols="30" placeholder="Mensaje" value='Mensje despedida' rows="4">Gracias por interactuar con nuesto ChatBot  recuerda que para mas informacion puedes comunicarte con nosotros nuevamente por este medio, que tengas un feliz resto de dia. [{1F64F}]</textarea>
+                    </div>
+                    <div class="card-footer">
+                        <div class="derechaFloat">
+                            <a href="javascript:chatBot.guardarNodo('despedida');" class="btn btn-icon btn-success" id="btnIdGuardarNodoDespedida">
+                                <i class="fa fa-save"></i>
+                            </a>
+                            <a href="javascript:chatBot.editarNodo('despedida');" class="btn btn-icon btn-primary hide" id="btnIdEditaNodoDespedida">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-header modeleConfigNodos hide">
+        <div class="izquierdaFloat">
+            <h6 style="margin-top:5px;color:#FFFFFF !important;">Configurar nodos restantes</h6>
+        </div>
+        <div class="derechaFloat">
+            <a href="javascript:$('.modeleConfigNodos').hide();$('.modeleConfigNodoIniciodespedida').show();" class="btn btn-icon btn-primary">
+                <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+            </a>
+            <a href="javascript:chatBot.siguienteNodoCreateJson();" class="btn btn-icon btn-primary" id="btnSiguieResumenCreate">
+                <i class="fas fa-arrow-right text-while" style="font-size:17px;"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body modeleConfigNodos hide">
+        <div class="row row-cols-1 row-cols-md-3 g-4" id="pasoTresNodosAdcionales">
+            
+        </div>
+    </div>
+    <div class="card-header modeleterminaNodos hide">
+        <div class="izquierdaFloat">
+            <h6 style="margin-top:5px;color:#FFFFFF !important;">Resumen creación contexto</h6>
+        </div>
+        <div class="derechaFloat">
+            <a href="javascript:chatBot.terminarContexto();" class="btn btn-icon btn-primary" id="btnSiguieResumenCreate">
+                <i class="fas fa-arrow-right text-while" style="font-size:17px;"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body modeleterminaNodos hide">
+        <div class="row row-cols-1 row-cols-md-3 g-4" id="pasoContextoResumen"></div>
+    </div>
+</div>

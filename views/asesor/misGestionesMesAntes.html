@@ -1,0 +1,78 @@
+<div class="table-responsive">
+    <table class="table" style="width:100%" id="tableAsesoresAsigMesAntes">
+        <thead class="borderCard">
+            <tr>
+                <th>Empresa</th>
+                <th class="text-center">Cliente</th>
+                <th class="text-center">Segmento</th>
+                <th class="text-center">Cliente - Usuario</th>
+                <th class="text-center">Identificación</th>
+                <th class="text-center">Télefono</th>
+                <th class="text-center">Resultado</th>
+                <th class="text-center">Fecha gestión</th>
+                <th class="text-center">Más info.</th>
+                <th class="text-center">Chat</th>
+            </tr>
+        </thead>
+        <tbody id="idTbodyListGestiones">
+            {{for info in infoGestiones:}}
+                <tr id="idTrGestionInfo_{{=info['id']}}">
+                    <td>{{=str(info['empresa']).capitalize()}}</td>
+                    <td class="text-center">{{=str(info['cliente']).capitalize()}}</td>
+                    <td class="text-center">{{=str(info['segmento']).capitalize()}}</td>
+                    <td class="text-center">{{=str(info['nombre_cliente']).capitalize()}}</td>
+                    <td class="text-center">{{=info['identificacion_cliente']}}</td>
+                    <td class="text-center">{{=info['telefono_cliente']}}</td>
+                    <td class="text-center">{{=str(info['descripcion_resultado']).capitalize()}}</td>
+                    <td class="text-center">{{=info['fecha_interaccion']}} {{=info['hora_interaccion']}}</td>
+                    <td class="text-center">
+                        <a href="javascript:ases.masInfoGestion('{{=info['id']}}','{{=str(info['nombre_cliente']).capitalize()}}','{{=info['comentarios']}}','{{=info['formulario']}}','{{=info['formulario_id']}}');">
+                            <i class="fas fa-info-circle text-primary" style="font-size:17px;"></i>
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <a href="javascript:ases.verChats('{{=info['id_info_cliente']}}','{{=str(info['nombre_cliente']).capitalize()}}','{{=info['id_empresa']}}','{{=info['telefono_cliente']}}');">
+                            <i class="fab fa-whatsapp text-success" style="font-size:17px;"></i>
+                        </a>
+                    </td>
+                </tr>
+            {{pass}}
+        </tbody>
+    </table>
+</div>
+{{block page_js}}
+    <script>
+        $('#tableAsesoresAsigMesAntes').DataTable({
+            "responsive": true,
+            "autoWidth": true,
+            "ordering": true,
+            "order": [
+                [0, "asc"]
+            ],
+            info: true,
+            paging: true,
+            "scrollY": "380px",
+            "scrollCollapse": true,
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+        });
+    </script>
+{{end page_js}}

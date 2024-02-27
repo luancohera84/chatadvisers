@@ -1,0 +1,62 @@
+<ul class="user-list mt-2">
+    <input type="hidden" id="clienteSelCard" value=" {{=data.idCliente}}">
+    <input type="hidden" id="clienteSelNombre" value=" {{=data.nomCliente}}">
+    {{ if len(listadoSegmentos) > 0: }}
+        {{ for seg in listadoSegmentos:}}
+            <li class="user-list-item" id="segmentoLi_{{=seg.id}}">
+                <div>
+                    {{ if seg.estado_segmento == 'True' :}}
+                        <div class="avatar avatar-online">
+                            <div class="letter-avatar">
+                                {{=str(seg.nombre_segmento).capitalize()[:1]}}{{=str(seg.nombre_segmento).capitalize()[-1:]}}
+                            </div>
+                        </div>
+                    {{else:}}
+                        <div class="avatar avatar-offline">
+                            <div class="letter-avatar">
+                                {{=str(seg.nombre_segmento).capitalize()[:1]}}{{=str(seg.nombre_segmento).capitalize()[-1:]}}
+                            </div>
+                        </div>
+                    {{pass}}
+                </div>
+                <div class="users-list-body">
+                    <div class="izquierdaFloat">
+                        <h6>{{=str(seg.nombre_segmento).capitalize()}}</h6>
+                        <p><span class="material-icons">check_circle</span>  {{=fechaFormato(seg.fecha_creacion_segmento,'fecha')}} | {{=fechaFormato(seg.hora_creacion_segmento,'hora')}}</p>
+                    </div>
+                    <div class="chat-action-btns me-2 derechaFloat">
+                        <div class="chat-action-col">
+                            <a class="#" href="#" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a href="javascript:template.showModal('edicionSegmento','{{=str(seg.nombre_segmento).capitalize()}}','{{=seg.id}}')" class="dropdown-item dream_profile_menu">Editar <span><i class="far fa-edit"></i></span></a>
+                                {{ if seg.estado_segmento == 'True' :}}
+                                    <a href="javascript:template.updateEstado('segmento','{{=seg.id}}',1);" class="dropdown-item">Inactivar <span><i class="far fa-thumbs-down"></i></span></a>
+                                {{else:}}
+                                    <a href="javascript:template.updateEstado('segmento','{{=seg.id}}',0);" class="dropdown-item">Activar <span><i class="far fa-thumbs-up"></i></span></a>
+                                {{pass}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        {{pass}}
+    {{else:}}
+        <li class="user-list-item">
+            <div>
+                <div class="avatar avatar-offline">
+                    <div class="letter-avatar">
+                        N
+                    </div>
+                </div>
+            </div>
+            <div class="users-list-body">
+                <div>
+                    <h5>No hay segmentos creados</h5>
+                    <p><span class="material-icons">check_circle</span>  {{=str(request.now)[:16]}}</p>
+                </div>
+            </div>
+        </li>
+    {{pass}}
+</ul>

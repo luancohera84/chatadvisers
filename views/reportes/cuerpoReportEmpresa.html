@@ -1,0 +1,155 @@
+<link rel="stylesheet" href="{{=URL('static','css/reporte.css')}}">
+<div class="slimscroll">
+    <div class="card abajoMin">
+        <div class="card-header">
+            <div class="text-center titulo">
+                <small>Reporte {{=varDatos.nomEmpresa}}</small>
+                <input type="hidden" id="empresaSelCard" value="{{=varDatos.idEmpresa}}">
+                <input type="hidden" id="empresaSelNombre" value="{{=varDatos.nomEmpresa}}">
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="card">
+                <div class="card-header">
+                    <div style="float: right">
+                        <a href="javascript:reps.cambioPantalla('asignacion','idDivBodyGestiones','idDivBodyAsignacion')" class="btn btn-outline-primary btn-sm btnBuscar" id="btnAsignacion">Resumen {{=mesCurso(str(request.now).split('-')[1])}}</a>
+                        <!-- &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="javascript:reps.cambioPantalla('fechas','idDivBodyAsignacion','idDivBodyFechas')" class="btn btn-outline-primary btn-sm" id="btnFechas">Fechas</a> -->
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="javascript:reps.cambioPantalla('gestiones','idDivBodyAsignacion','idDivBodyGestiones')" class="btn btn-outline-primary btn-sm" id="btnFechas">Gestiones {{=mesCurso(str(request.now).split('-')[1])}}</a>
+                    </div>
+                </div>
+                <div class="card-body" id="idDivBodyAsignacion">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card borderCard">
+                                <div class="card-body text-center">
+                                    <span id="idSpanChatAtencion">
+                                        <i class="fa fa-spinner fa-spin" id="idSpinerChatAtencion" style="font-size:25px;color:#5A078B;text-align:center;"></i>
+                                        <span id="idSpanValoresChatAtencion"></span>
+                                    </span><br>
+                                    <h6>Chats cerrados</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card borderCard">
+                                <div class="card-body text-center">
+                                    <span id="idSpanChatCola">
+                                        <i class="fa fa-spinner fa-spin" id="idSpinerChatCola" style="font-size:25px;color:#5A078B;text-align:center;"></i>
+                                        <span id="idSpanValoresChatCola"></span>
+                                    </span><br>
+                                    <h6>Sms en cola</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card borderCard">
+                                <div class="card-body text-center">
+                                    <span id="idSpanChatPromAtencion">
+                                        <i class="fa fa-spinner fa-spin" id="idSpinerChatPromAtencion" style="font-size:25px;color:#5A078B;text-align:center;"></i>
+                                        <span id="idSpanValoresChatPromAtencion"></span>
+                                    </span><br>
+                                    <h6>Prom. atención</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="col">
+                            <div class="card borderCard">
+                                <div class="card-body text-center">
+                                    <span id="idSpanChatAcPago">
+                                        <i class="fa fa-spinner fa-spin" id="idSpinerChatAcPago" style="font-size:25px;color:#5A078B;text-align:center;"></i>
+                                        <span id="idSpanValoresChatAcPago"></span>
+                                    </span><br>
+                                    <h6>Acuerdos pago</h6>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col" id="idDivChatListAsesores">
+                            <div class="card-body text-center" id="idSpinerChatListAsesores">
+                                <span  class="text-center">
+                                    <i class="fa fa-spinner fa-spin"  style="font-size:25px;color:#5A078B;text-align:center;"></i> <br>
+                                    <h6>Lista asesores</h6>
+                                </span>
+                            </div>
+                            <div class="table-responsive hide" id="idDivTableListAsesores">
+                                <table class="table" style="width:100%" id="tableAsesoresAsig">
+                                    <thead class="borderCard">
+                                        <tr>
+                                            <th>Asesor</th>
+                                            <th class="text-center">Cantidad cerrados</th>
+                                            <!-- <th class="text-center">Cantidad acuerdos</th> -->
+                                            <th class="text-center">Cantidad en cola</th>
+                                            <th class="text-center">Ultima gestión</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="idTbodyListAsesores"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body hide" id="idDivBodyFechas">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" 
+                                        class="validate fecha picker__input form-control" 
+                                        id="fechaInicial"
+                                        placeholder="Click aquí para tu fecha inicial" 
+                                        readonly="" 
+                                        aria-haspopup="true" 
+                                        aria-expanded="false" 
+                                        aria-readonly="false" 
+                                        aria-owns="fechaInicial_root"
+                                        required=""
+                                        >
+                                </div>
+                                <div class="col">
+                                    <input type="text" 
+                                        class="validate fecha picker__input form-control" 
+                                        id="fechaFinal"
+                                        placeholder="Click aquí para tu fecha final" 
+                                        readonly="" 
+                                        aria-haspopup="true" 
+                                        aria-expanded="false" 
+                                        aria-readonly="false" 
+                                        aria-owns="fechaFinal_root"
+                                        required=""
+                                        >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col">
+                                    <a href="javascript:reps.limpiarReporte();" class="btn btn-block btn-primary btnBuscar">Limpiar</a>
+                                </div>
+                                <div class="col">
+                                    <a href="javascript:reps.buscarReporte();" class="btn btn-block btn-sucess btnBuscar">Buscar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body hide" id="idDivBodyGestiones">
+                    <div class="row">
+                        <div class="col col-12" id="idSpinerGestionesListAsesores">
+                            <div class="card-body text-center">
+                                <span  class="text-center">
+                                    <i class="fa fa-spinner fa-spin" style="font-size:25px;color:#5A078B;text-align:center;"></i> <br>
+                                    <h6 id="textoSpinner">Listando gestiones {{=mesCurso(str(request.now).split('-')[1])}}</h6>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col col-12 hide" id="idDivBodyGestionesAsig"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

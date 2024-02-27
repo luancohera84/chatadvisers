@@ -1,0 +1,150 @@
+{{extend rederHtmlPrincipal()}}
+<!-- {{block head}}
+    <link href="{{=URL('static','js/pickadateJs/vendor/pickadate/lib/themes/default.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{=URL('static','js/pickadateJs/vendor/pickadate/lib/themes/default.date.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{=URL('static','js/pickadateJs/vendor/pickadate/lib/themes/default.time.css')}}" rel="stylesheet" type="text/css" />
+{{end}} -->
+<!-- NavBar inicial -->
+<div class="sidebar-group left-sidebar chat_sidebar">
+
+    <div id="chats" class="left-sidebar-wrap sidebar active slimscroll">
+        <div class="slimscroll">
+            <div class="left-chat-title d-flex justify-content-between align-items-center">
+                <div class="chat-title">
+                    <h4>{{=str(response.suBtitle).capitalize()}}</h4>
+                </div>
+                <!-- <div class="add-section">
+                    <ul>
+                        <li><a href="#!"><span class="material-icons">group</span></a></li>
+                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#add-user"><i class="fas fa-plus"></i></a></li>
+                    </ul>
+                </div> -->
+            </div>
+            <div class="search_chat has-search"></div>
+            <div class="sidebar-body" id="chatsidebar">
+                <div class="left-chat-title d-flex justify-content-between align-items-center ps-0 pe-0">
+                    <div class="chat-title">
+                        <h4>{{=str(response.title).capitalize()}}</h4>
+                    </div>
+                    <!-- <div class="add-section">
+                        <a href="#"><i class="fas fa-edit"></i></a>
+                    </div> -->
+                </div>
+                <ul class="user-list mt-2" id="listaEmpresas">
+                    <!-- <li class="user-list-item">
+                        <div class="avatar avatar-online">
+                            <img src="{{=URL('static','template/base/assets/img/avatar/avatar-8.jpg')}}" class="rounded-circle" alt="image">
+                        </div>
+                        <div class="users-list-body">
+                            <div>
+                                <h5>Regina Dickerson</h5>
+                                <p>It seems logical that the</p>
+                            </div>
+                            <div class="last-chat-time">
+                                <small class="text-muted">05 min</small>
+                                <div class="new-message-count">11</div>
+                            </div>
+                        </div>
+                    </li> -->
+                    {{ if len(infoCompany) > 0: }}
+                        {{ if ( ( userType[0] ==  'Developer' ) | ( userType[0] ==  'Administrador' )): }}
+                            {{ for emp in  infoCompany:}}
+                                <li class="user-list-item" id="empresaLi_{{=emp.id}}">
+                                    <div>
+                                        {{if emp.estado_empresa == 'True' :}}
+                                            <div class="avatar avatar-online">
+                                                <div class="letter-avatar" onclick="reps.verInfoEmpresa( '{{=emp.id}}','{{=str(emp.nombre_empresa).capitalize()}}' )">
+                                                    {{=str(emp.nombre_empresa).capitalize()[:1]}}
+                                                </div>
+                                            </div>
+                                        {{else:}}
+                                            <div class="avatar avatar-offline">
+                                                <div class="letter-avatar" onclick="reps.verInfoEmpresa( '{{=emp.id}}','{{=str(emp.nombre_empresa).capitalize()}}' )">
+                                                    {{=str(emp.nombre_empresa).capitalize()[:1]}}
+                                                </div>
+                                            </div>
+                                        {{pass}}
+                                    </div>
+                                    <div class="users-list-body">
+                                        <div>
+                                            <h5>{{=str(emp.nombre_empresa).capitalize()}}</h5>
+                                            <p><span class="material-icons">check_circle</span>  {{=fechaFormato(emp.fecha_creacion_empresa,'fecha')}} | {{=fechaFormato(emp.hora_creacion_empresa,'hora')}}</p>
+                                        </div>
+                                        <div class="chat-action-btns me-2"></div>
+                                    </div>
+                                </li>
+                            {{pass}}
+                        {{else:}}
+                            {{ for emp in  infoCompany:}}
+                                <li class="user-list-item" id="empresaLi_{{=emp.empresas.id}}">
+                                    <div>
+                                        {{if emp.empresas.estado_empresa == 'True' :}}
+                                            <div class="avatar avatar-online">
+                                                <div class="letter-avatar" onclick="reps.verInfoEmpresa( '{{=emp.empresas.id}}','{{=str(emp.empresas.nombre_empresa).capitalize()}}' )">
+                                                    {{=str(emp.empresas.nombre_empresa).capitalize()[:1]}}
+                                                </div>
+                                            </div>
+                                        {{else:}}
+                                            <div class="avatar avatar-offline">
+                                                <div class="letter-avatar" onclick="reps.verInfoEmpresa( '{{=emp.empresas.id}}','{{=str(emp.empresas.nombre_empresa).capitalize()}}' )">
+                                                    {{=str(emp.empresas.nombre_empresa).capitalize()[:1]}}
+                                                </div>
+                                            </div>
+                                        {{pass}}
+                                    </div>
+                                    <div class="users-list-body">
+                                        <div>
+                                            <h5>{{=str(emp.empresas.nombre_empresa).capitalize()}}</h5>
+                                            <p><span class="material-icons">check_circle</span>  {{=fechaFormato(emp.asesores_empresas.hora_creacion,'fecha')}} | {{=fechaFormato(emp.asesores_empresas.fecha_creacion,'hora')}}</p>
+                                        </div>
+                                        <div class="chat-action-btns me-2"></div>
+                                    </div>
+                                </li>
+                            {{pass}}
+                        {{pass}}
+                    {{else:}}
+                        <li class="user-list-item">
+                            <div>
+                                <div class="avatar avatar-offline">
+                                    <div class="letter-avatar">
+                                        N
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="users-list-body">
+                                <div>
+                                    <h5>No hay empresas asignadas</h5>
+                                    <p><span class="material-icons">check_circle</span>  {{=str(request.now)[:16]}}</p>
+                                </div>
+                            </div>
+                        </li>   
+                    {{pass}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cuerpo repprte -->
+<div class="chat" id="middle-empresas">
+    <div class="slimscroll">
+        <div class="chat-header card-header">
+            <h6 class="text-center titulo">
+                Reporte empresa seleccionada
+            </h6>
+        </div>
+        <div class="chat-body">
+            <div class="messages">
+                <div class="chats"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{{block page_js}}
+    <!-- <script src="{{=URL('static','js/pickadateJs/vendor/pickadate/lib/compressed/picker.js')}}"></script>
+    <script src="{{=URL('static','js/pickadateJs/vendor/pickadate/lib/compressed/picker.date.js')}}"></script>
+    <script src="{{=URL('static','js/pickadateJs/vendor/pickadate/lib/picker.time.js')}}"></script>
+    <script src="{{=URL('static','js/pickadateJs/vendor/pickadate/lib/legacy.js')}}"></script>
+    <script src="{{=URL('static','js/pickadateJs/vendor/pickadate/lib/translations/es_ES.js')}}"></script> -->
+    <script src="{{=URL('static','js/reportes/dashboard.js')}}"></script>
+{{end page_js}}

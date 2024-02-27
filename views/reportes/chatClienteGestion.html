@@ -1,0 +1,386 @@
+{{extend rederHtmlPrincipal()}}
+<input type="hidden" value="{{=varDatos.numberCustomer}}" id="id_info_cliente">
+<input type="hidden" value="{{=varDatos.numberCompany}}" id="idEmpresaChatCli">
+<input type="hidden" value="1" id="pageChats">
+<div class="sidebar-group left-sidebar chat_sidebar">
+
+    <div id="chats" class="left-sidebar-wrap sidebar active slimscroll">
+        <div class="slimscroll">
+            {{#=varDatos}}
+            <div class="left-chat-title d-flex justify-content-between align-items-center">
+                <div class="chat-title">
+                    <h6>Información chats {{=str(varDatos.nCustomer).capitalize()}}</h6>
+                </div>
+            </div>
+            <div class="search_chat has-search"></div>
+
+            <div class="sidebar-body" id="chatsidebar">
+
+                <div class="left-chat-title d-flex justify-content-between align-items-center ps-0 pe-0" style="margin-top:-30px;">
+                </div>
+                <ul class="user-list mt-2">
+                    {{ if varDatos.nCustomer :}}
+                        <li class="user-list-item" style="background-color: #5A078B;">
+                            <div>
+                                <div class="avatar avatar-online">
+                                    <div class="letter-avatar">
+                                        {{=str(varDatos.nCustomer).capitalize()[:1]}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="users-list-body">
+                                <div>
+                                    <h5 style="color: #FFFFFF;"> {{=varDatos.nCustomer}}</h5>
+                                    <p style="color: #FFFFFF;"><span class="material-icons">call</span>  {{=varDatos.nPhone}}</p>
+                                </div>
+                                <div class="last-chat-time" id="indicadorSmsCantidadTiempo_{{#=infCl.id}}">
+                                    {{#dataClienteSms,tiempoEspera = setCantidadClienteSms( infCl.id ) }}
+                                    <small class="text-muted">{{#=tiempoEspera}}</small>
+                                    <div class="new-message-count">{{#=dataClienteSms}}</div>
+                                </div>
+                            </div>
+                        </li>
+                    {{else:}}
+                        <li class="user-list-item">
+                            <div>
+                                <div class="avatar avatar-offline">
+                                    <div class="letter-avatar">
+                                        N
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="users-list-body">
+                                <div>
+                                    <h6>No encontramos chats para esta persona</h6>
+                                    <p><span class="material-icons">check_circle</span>  {{=str(request.now)[:16]}}</p>
+                                </div>
+                            </div>
+                        </li>
+                    {{pass}}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="chat" id="middle">
+    <div class="slimscroll">
+        <div class="chat-header">
+            <div class="user-details">
+                <div class="d-lg-none ms-2">
+                    <ul class="list-inline mt-2 me-2">
+                        <li class="list-inline-item">
+                            <a class="text-muted px-0 left_side" href="#" data-chat="open">
+                                <i class="fas fa-arrow-left"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <figure class="avatar ms-1">
+                    <img src="{{=URL('static','template/base/assets/img/logo.png')}}" class="rounded-circle"
+                        alt="image">
+                </figure>
+                <div class="mt-1">
+                    <h5 id="nombreBodyChatCliente">
+                        {{=str(varDatos.nCustomer)}}
+                    </h5>
+                    <small class="online">
+                        Chat establecido            
+                    </small>
+                </div>
+            </div>
+            <div class="chat-options">
+                <ul class="list-inline">
+                    <li class="list-inline-item dream_profile_menu" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="Ofertas">
+                        <a href="javascript:cargaOfertas();" class="btn btn-outline-light">
+                            <i class="fas fa-money-bill-alt"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="Buscar mensaje">
+                        <a href="javascript:void(0)" class="btn btn-outline-light chat-search-btn">
+                            <i class="fas fa-search"></i>
+                        </a>
+                    </li>
+                    
+                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Regresar gestiones">
+                        <a href="{{=URL('reportes','empresas')}}" class="btn btn-outline-light">
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="chat-search" style="z-index:1;">
+                <form>
+                    <span class="fas fa-search form-control-feedback"></span>
+                    <input type="text" name="chat-search" placeholder="Buscar mensajes" class="form-control">
+                    <div class="close-btn-chat"><span class="material-icons">close</span></div>
+                </form>
+            </div>
+
+        </div>
+        <div class="slimscroll">
+            <div class="chat-body">
+                <div class="messages" id="idBodySmsConversacion"> </div>
+            </div>
+        </div>
+    </div>
+    <div class="chat-footer hide" id="idFooterFomularioEnvioDiaGestiones">
+        <form onsubmit="return false;" id="formularioEncvioSms">
+            <div class="smile-col">
+                <a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Contextos"><i class="fas fa-chalkboard-teacher"></i></a>
+            </div>
+            <div class="attach-col">
+                <a href="" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mensajes preestablecidos"><i class="fas fa-sms"></i></a>
+            </div>
+            <input type="text" id="mensajeEscribiendoAsesor" class="form-control chat_form"
+                placeholder="Escriba su mensaje....." required>
+            <div class="form-buttons">
+                <button class="btn send-btn" type="submit">
+                    <span class="material-icons">send</span>
+                </button>
+            </div>
+            <!-- <div class="specker-col">
+                <a href="#"><span class="material-icons">settings_voice</span></a>
+            </div> -->
+        </form>
+    </div>
+    <div class="chat-footer hide" id="idFooterFomularioEnvioHistoryGestiones">
+        <form onsubmit="return false;" id="formularioEncvioSmsHistory">
+            <div class="smile-col">
+                <a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Contextos"><i class="fas fa-chalkboard-teacher"></i></a>
+            </div>
+            <div class="attach-col">
+                <a href="#!" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mensajes preestablecidos"><i class="fas fa-sms"></i></a>
+            </div>
+            <input type="text" id="mensajeEscribiendoAsesorHistory" class="form-control chat_form"
+                placeholder="Escriba su mensaje....." required>
+            <div class="form-buttons">
+                <button class="btn send-btn" type="submit">
+                    <span class="material-icons">send</span>
+                </button>
+            </div>
+            <!-- <div class="specker-col">
+                <a href="#"><span class="material-icons">settings_voice</span></a>
+            </div> -->
+        </form>
+    </div>
+</div>
+
+<div class="right-sidebar right_sidebar_profile hide-right-sidebar hide" id="middle1">
+    <div class="right-sidebar-wrap active">
+        <div class="slimscroll">
+            <div class="left-chat-title d-flex justify-content-between align-items-center p-3">
+                <div class="chat-title">
+                    <h4>Ofertas</h4>
+                </div>
+                <div class="contact-close_call text-end">
+                    <a href="#" class="close_profile close_profile4">
+                        <span class="material-icons">close</span>
+                    </a>
+                </div>
+            </div>
+            <!-- <img src="" height="100%" width="100%" alt=""> -->
+            <div class="sidebar-body">
+                <div class="mt-0 right_sidebar_logo">
+                    <div class="text-center right-sidebar-profile" style="margin-top:-30px;"></div>
+                    <div id="canal" class="hide"></div>
+                    <div id="ofertaUnica">
+                        <div class="about-media-tabs">
+                            <nav>
+                                <div class="nav nav-tabs justify-content-end" id="nav-tab"></div>
+                            </nav>
+                            <div class="tab-content" id="nav-tabContent">
+                                <div class="tab-pane fade show active" id="about">
+                                    <p class="textOfertaViews" align="justify">Asesor recuerde que la infomacion aca mostrada corresponde a la ultima cargada a el cliente.</p>
+                                    <hr>
+                                    <div class="member-details" style="margin-top:-10px;">
+                                        <ul id="ulNabTabOferta"></ul>
+                                    </div>
+                                    <!-- <div class="social-media-col">
+                                        <h6>Links otros canales</h6>
+                                        <ul>
+                                            <li id="linkIdTuacuerdo"></li>
+                                        </ul>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--div class="report-col">
+                <ul>
+                    <li><a href="#"><span class="material-icons">report_problem</span> Report Chat</a></li>
+                    <li><a href="#"><span><i class="far fa-trash-alt"></i></span> Delete Chat</a></li>
+                </ul>
+            </div-->
+        </div>
+    </div>
+</div>
+
+{{block page_js}}
+    <script>
+        cargaHistorial = function() {
+            template.showPreloader('Cargando historial');
+            $.ajax({
+                url: '../asesor/cargaHistorial',
+                type: 'POST',
+                dataType: 'json',
+                data: {idCliente: $('#id_info_cliente').val()},
+            })
+            .done(function( data ) {
+                
+                template.hidePreloader();
+                rederBodySms( data );
+            });
+        }
+        rederBodySms = function( data ) {
+            let dataHtml = [];
+            let contadorFechas = 0;
+            let fechaLinea = 0;
+            $.each(data, function(index, val) {
+                // console.log('vallll', val)
+                let lineaFecha = `
+                    <div class="chat-line">
+                        <span class="chat-date">`+val.textFecSms+`</span>
+                    </div>
+                `
+                if ( contadorFechas === 0 ) {
+                    dataHtml.push(lineaFecha);
+                }else{
+                    if (fechaLinea != val.fechaSms ) {
+                        dataHtml.push(lineaFecha);
+                    }
+                }
+                if ( val.tipoUsuario === 'cliente' ) {
+                    if ( val.tipoSms === 'image' ) {
+                        var tmpHtml = `
+                            <div class="chats">
+                                <div class="chat-avatar">
+                                    <img src="../static/template/base/assets/img/logo.png" class="rounded-circle dreams_chat" alt="image">
+                                </div>
+                                <div class="chat-content">
+                                    <div class="message-content">
+                                        <div class="download-col">
+                                            <ul>
+                                                <li>
+                                                    <div class="image-download-col">
+                                                        <a href="../static/multimedia/image/`+val.sms+`" data-fancybox="gallery" class="fancybox">
+                                                            <img src="../static/multimedia/image/`+val.sms+`" height="50px" width="50px" alt="image">
+                                                        </a>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="chat-time">
+                                            <div>
+                                                <div class="time"><i class="fas fa-clock"></i> `+val.horaSms+`</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="chat-profile-name">
+                                        <h6>`+val.cliente+`</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <br><br>
+                        `;
+                    } else if ( val.tipoSms === 'audio' ){ 
+                        var tmpHtml = `
+                            <div class="chats">
+                                <div class="chat-avatar">
+                                    <img src="../static/template/base/assets/img/logo.png" class="rounded-circle dreams_chat" alt="image">
+                                </div>
+                                <div class="chat-content">
+                                    <div class="message-content">
+                                        <audio controls>
+                                            <source src="../static/multimedia/audio/`+val.sms+`" type="audio/mpeg">
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                        <div class="chat-time">
+                                            <div>
+                                                <div class="time"><i class="fas fa-clock"></i> `+val.horaSms+`</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="chat-profile-name">
+                                        <h6>`+val.cliente+`</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <br><br>
+                        `;
+                    } else {
+                        var tmpHtml = `
+                            <div class="chats">
+                                <div class="chat-avatar">
+                                    <img src="../static/template/base/assets/img/logo.png" class="rounded-circle dreams_chat" alt="image">
+                                </div>
+                                <div class="chat-content">
+                                    <div class="message-content">
+                                        `+val.sms+`
+                                        <div class="chat-time">
+                                            <div>
+                                                <div class="time"><i class="fas fa-clock"></i> `+val.horaSms+`</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="chat-profile-name">
+                                        <h6>`+val.cliente+`</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <br><br>
+                        `;
+                    }
+                    dataHtml.push(tmpHtml);
+                    
+                } else {
+                    let tmpHtml = `
+                        <div class="chats chats-right">
+                            <div class="chat-content">
+                                <div class="message-content">
+                                    `+val.sms+`
+                                    <div class="chat-time">
+                                        <div>
+                                            <div class="time"><i class="fas fa-clock"></i> `+val.horaSms+`</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chat-profile-name text-end">
+                                    <h6>`+val.asesor+`</h6>
+                                </div>
+                            </div>
+                            <div class="chat-avatar">
+                                <!--img src="`+template.imagenAsesor+`" class="rounded-circle dreams_chat" alt="image"-->
+                                <img src="../static/images/cropped-favicon2-32x32.png" class="rounded-circle dreams_chat" alt="image">
+                            </div>
+                        </div>
+                        <br><br>
+                    `;
+                    dataHtml.push(tmpHtml);
+                }
+                contadorFechas = contadorFechas + 1;
+                fechaLinea = val.fechaSms;
+            });
+            $('#idBodySmsConversacion').html(dataHtml);
+            $('#idBodySmsConversacion').append(`
+                <a class="ir-arriba icon-arrow-up2 btn btn-info rounded-pill">
+                    <i class="fas fa-search text-white"></i>
+                </a>
+            `);
+            $('#idFooterFomularioEnvioHistory').hide();
+            $('#idFooterFomularioEnvioDia').show();
+            $("#mensajeEscribiendoAsesor").focus();
+            template.getMessages();
+        }
+        cargaOfertas = function() {
+            
+        }
+        cargaHistorial();
+    </script>
+{{end page_js}}

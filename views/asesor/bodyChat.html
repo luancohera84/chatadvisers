@@ -1,0 +1,275 @@
+<div class="sidebar-group left-sidebar chat_sidebar">
+    <div id="chats" class="left-sidebar-wrap sidebar active slimscroll">
+        <div class="slimscroll">
+
+            <div class="left-chat-title d-flex justify-content-between align-items-center">
+                <div class="chat-title">
+                    <h6>Listado chats {{=str(varDatos.nombreEmpresaGlb).capitalize()}}</h6>
+                </div>
+            </div>
+            <div class="search_chat has-search">
+                <span class="fas fa-search form-control-feedback"></span>
+                <input class="form-control chat_input" id="search-contacts" type="text" placeholder="Buscar chat">
+            </div>
+
+            <div class="sidebar-body" id="chatsidebar">
+
+                <div class="left-chat-title d-flex justify-content-between align-items-center ps-0 pe-0"
+                    style="margin-top:-30px;">
+                </div>
+                <ul class="user-list mt-2">
+                    {{ if len(listadoClientesChat) > 0 :}}
+                    {{ for infCl in listadoClientesChat :}}
+                    {{ nombreCliente = str(infCl.name).capitalize()+' '+str(infCl.surname).capitalize()}}
+                    <!--a href="{{#=URL('asesor','bodyChat?yctl=%s&yctlH=%s&prem=%s&atrg=%s&mena=%s&menaTlc=%s')%(infCl.id,infCl.id_info_cliente_historica,varDatos.prem,varDatos.atrg,varDatos.mena,str(nombreCliente).replace(' ','_'))}}"-->
+                    <li class="user-list-item" id="idLiAserCliente_{{=infCl.id}}"
+                        onclick="ases.verInfoChatCliente('{{=infCl.id}}','{{=infCl.id_info_cliente_historica}}','{{=varDatos.idEmpresaGlb}}','{{=varDatos.idUser}}','{{=nombreCliente}}');">
+
+                        <div>
+                            <div class="avatar avatar-online">
+                                <div class="letter-avatar">
+                                    {{=str(infCl.Nombre).capitalize()[:1]}}{{=str(infCl.surname).capitalize()[:1]}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="users-list-body">
+                            <div>
+                                <h5 id="idHTextAserCliente_{{=infCl.id}}"> {{=nombreCliente}}</h5>
+                                <p id="idPTextAserCliente_{{=infCl.id}}"><span class="material-icons">call</span>
+                                    {{=infCl.telefono}}</p>
+                            </div>
+                            <div class="last-chat-time">
+                                <small class="text-muted">05 min</small>
+                                <div class="new-message-count">11</div>
+                            </div>
+                        </div>
+                    </li>
+                    <!--/a-->
+                    {{pass}}
+                    {{else:}}
+                    <li class="user-list-item">
+                        <div>
+                            <div class="avatar avatar-offline">
+                                <div class="letter-avatar">
+                                    N
+                                </div>
+                            </div>
+                        </div>
+                        <div class="users-list-body">
+                            <div>
+                                <h6>No encontramos chats para esta empresa</h6>
+                                <p><span class="material-icons">check_circle</span> {{=str(request.now)[:16]}}</p>
+                            </div>
+                        </div>
+                    </li>
+                    {{pass}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="chat" id="middle">
+    <div class="slimscroll">
+        <div class="chat-header">
+            <div class="user-details">
+                <div class="d-lg-none ms-2">
+                    <ul class="list-inline mt-2 me-2">
+                        <li class="list-inline-item">
+                            <a class="text-muted px-0 left_side" href="#" data-chat="open">
+                                <i class="fas fa-arrow-left"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <figure class="avatar ms-1">
+                    <img src="{{=URL('static','template/base/assets/img/logo.png')}}" class="rounded-circle"
+                        alt="image">
+                </figure>
+                <!--div class="chat-options">
+                    <ul class="list-inline">
+                        <li style="color: #212529 !important;">
+                            <a href="javascript:void(0)" class="btn btn-outline-light">
+                                <i class="fas fa-user"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    &nbsp;&nbsp;
+                </div-->
+
+                <div class="mt-1">
+                    <h5>{{=varDatos.nombreClienteGlb}}</h5>
+                    <!--small class="online">
+                        Online
+                    </small-->
+                </div>
+
+            </div>
+            <div class="chat-options">
+                <ul class="list-inline">
+                    <li class="list-inline-item dream_profile_menu" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="Ofertas">
+                        <a href="javascript:void(0)" class="btn btn-outline-light"
+                            _style="background-color:#212529 !important;color:#ffffff !important;">
+                            <i class="fas fa-money-bill-alt"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="Buscar mensaje">
+                        <a href="javascript:void(0)" class="btn btn-outline-light chat-search-btn">
+                            <i class="fas fa-search"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tipificar">
+                        <a href="javascript:void(0)" class="btn btn-outline-light" data-bs-toggle="modal"
+                            data-bs-target="#video_call">
+                            <i class="fas fa-filter"></i>
+                        </a>
+                    </li>
+                    <!--li class="list-inline-item dream_profile_menu" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" title="Profile">
+                        <a href="javascript:void(0)" class="btn btn-outline-light">
+                            <i class="fas fa-money-bill-alt"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a class="btn btn-outline-light no-bg" href="#" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a href="javascript:void(0)" class="dropdown-item dream_profile_menu">
+                                Ofertas 
+                                <span>
+                                    <i class="fas fa-money-bill-alt"></i>
+                                    
+                                </span>
+                            </a>
+                            <a href="javascript:void(0)" class="dropdown-item chat-search-btn">
+                                Buscar 
+                                <span>
+                                    <i class="fas fa-search"></i>
+                                </span>
+                            </a>
+                            <a href="javascript:void(0)" class="dropdown-item" data-bs-toggle="modal"
+                                data-bs-target="#voice_call">
+                                 
+                                <span>
+                                    <i class="fas fa-filter"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </li-->
+                </ul>
+            </div>
+
+            <div class="chat-search">
+                <form>
+                    <span class="fas fa-search form-control-feedback"></span>
+                    <input type="text" name="chat-search" placeholder="Search Chats" class="form-control">
+                    <div class="close-btn-chat"><span class="material-icons">close</span></div>
+                </form>
+            </div>
+
+        </div>
+        <div class="chat-body" id="bodySmsConversa_{{=varDatos.idClienteGlb}}_{{=idUser}}">
+            <div class="messages">
+                <div class="chats">
+                    <div class="chat-avatar">
+                        <img src="{{=URL('static','template/base/assets/img/logo.png')}}"
+                            class="rounded-circle dreams_chat" alt="image">
+                    </div>
+                    <div class="chat-content">
+                        <div class="message-content">
+                            Hi James! What’s Up?
+                            <div class="chat-time">
+                                <div>
+                                    <div class="time"><i class="fas fa-clock"></i> 10:00</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-profile-name">
+                            <h6>Doris Brown</h6>
+                        </div>
+                    </div>
+                    <!--div class="chat-action-btns ms-3">
+                        <div class="chat-action-col">
+                            <a class="#" href="#" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a href="#" class="dropdown-item dream_profile_menu">Copy <span><i
+                                            class="far fa-copy"></i></span></a>
+                                <a href="#" class="dropdown-item">Save <span
+                                        class="material-icons">save</span></a>
+                                <a href="#" class="dropdown-item">Forward <span><i
+                                            class="fas fa-share"></i></span></a>
+                                <a href="#" class="dropdown-item">Delete <span><i
+                                            class="far fa-trash-alt"></i></span></a>
+                            </div>
+                        </div>
+                    </div-->
+                </div>
+                <div class="chats chats-right">
+                    <div class="chat-content">
+                        <div class="message-content">
+                            Good morning, How are you? What about our next meeting?
+                            <div class="chat-time">
+                                <div>
+                                    <div class="time"><i class="fas fa-clock"></i> 10:00</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-profile-name text-end">
+                            <h6>{{=nameUser}}</h6>
+                        </div>
+                    </div>
+                    <div class="chat-avatar">
+                        <img src="{{=getFotoUsuario(idUser)}}" class="rounded-circle dreams_chat" alt="image">
+                    </div>
+                    <!--div class="chat-action-btns me-2">
+                        <div class="chat-action-col">
+                            <a class="#" href="#" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a href="#" class="dropdown-item dream_profile_menu">Copy <span><i
+                                            class="far fa-copy"></i></span></a>
+                                <a href="#" class="dropdown-item">Save <span
+                                        class="material-icons">save</span></a>
+                                <a href="#" class="dropdown-item">Forward <span><i
+                                            class="fas fa-share"></i></span></a>
+                                <a href="#" class="dropdown-item">Delete <span><i
+                                            class="far fa-trash-alt"></i></span></a>
+                            </div>
+                        </div>
+                        <div class="chat-read-col">
+                            <span class="material-icons">done_all</span>
+                        </div>
+                    </div-->
+                </div>
+                <!--div class="chat-line">
+                    <span class="chat-date">Today</span>
+                </div-->
+            </div>
+        </div>
+    </div>
+    <div class="chat-footer">
+        <form onsubmit="return false;">
+            <div class="smile-col">
+                <a href="#"><i class="far fa-smile"></i></a>
+            </div>
+            <div class="attach-col">
+                <a href="#"><i class="fas fa-paperclip"></i></a>
+            </div>
+            <input type="text" id="mensajeEscribiendoAsesor" class="form-control chat_form"
+                placeholder="Escriba su mensaje.....">
+            <div class="form-buttons">
+                <button class="btn send-btn" type="submit">
+                    <span class="material-icons">send</span>
+                </button>
+            </div>
+            <!--div class="specker-col">
+                <a href="#"><span class="material-icons">settings_voice</span></a>
+            </div-->
+        </form>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+<ul class="user-list mt-2" id="listaEmpresas">
+    {{ if len(infoCompany) > 0: }}
+        <div class="container-fluid">
+            <h6 class="text-center">Seleccione la empresa que desea asignar</h6>
+            <hr>
+            <div class="row">
+                {{ for emp in  infoCompany:}}
+                    {{ if setValidateEmpresasusuarios( emp.id, varDatos.idUser ) == 0 :}}
+                        {{ if emp.estado_empresa == 'True' :}}
+                            <div class="col-4 form-group"  id="empresUsuarioaDiv_{{=emp.id}}_{{=varDatos.idUser}}">
+                                <li class="user-list-item" id="empresUsuarioaLi_{{=emp.id}}_{{=varDatos.idUser}}" onclick="usus.questionAsigEmpresa( '{{=emp.id}}','{{=varDatos.idUser}}', 0, '{{=str(emp.nombre_empresa).capitalize()[:1]}}', '{{=str(emp.nombre_empresa).capitalize()}}' )">
+                                    <div>
+                                        <div class="avatar avatar-online">
+                                            <div class="letter-avatar">
+                                                {{=str(emp.nombre_empresa).capitalize()[:1]}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="users-list-body">
+                                        <div>
+                                            <h5>{{=str(emp.nombre_empresa).capitalize()}}</h5>
+                                        </div>
+                                    </div>
+                                </li>
+                            </div>
+                        {{pass}}       
+                    {{pass}}
+                {{pass}}
+            </div>
+        </div>
+    {{else:}}
+        <li class="user-list-item">
+            <div>
+                <div class="avatar avatar-offline">
+                    <div class="letter-avatar">
+                        N
+                    </div>
+                </div>
+            </div>
+            <div class="users-list-body">
+                <div>
+                    <h5>No hay empresas creadas</h5>
+                    <p><span class="material-icons">check_circle</span>  {{=str(request.now)[:16]}}</p>
+                </div>
+            </div>
+        </li>   
+    {{pass}}
+</ul>

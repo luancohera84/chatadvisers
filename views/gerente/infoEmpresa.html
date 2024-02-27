@@ -1,0 +1,98 @@
+<div class="slimscroll">
+    <div class="card abajoMin">
+        <div class="card-header">
+            <div class="text-center titulo">
+                {{=data.nomEmpresa}}
+                <input type="hidden" id="empresaSelCard" value=" {{=data.idEmpresa}}">
+                <input type="hidden" id="empresaSelNombre" value=" {{=data.nomEmpresa}}">
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="text-center titulo">
+                                Listado clientes
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="user-list mt-2">
+                                {{ if len(listadoClientes) > 0: }}
+                                    {{ for clts in listadoClientes:}}
+                                        <li class="user-list-item" id="clienteLi_{{=clts.id}}">
+                                            <div>
+                                                {{ if clts.estado_cliente == 'True' :}}
+                                                    <div class="avatar avatar-online" onclick="ger.verInfoCliente( '{{=clts.id}}','{{=str(clts.nombre_cliente).capitalize()}}' )">
+                                                        <div class="letter-avatar">
+                                                            {{=str(clts.nombre_cliente).capitalize()[:1]}}{{=str(clts.nombre_cliente).capitalize()[-1:]}}
+                                                        </div>
+                                                    </div>
+                                                {{else:}}
+                                                    <div class="avatar avatar-offline" onclick="ger.verInfoCliente( '{{=clts.id}}','{{=str(clts.nombre_cliente).capitalize()}}' )">
+                                                        <div class="letter-avatar">
+                                                            {{=str(clts.nombre_cliente).capitalize()[:1]}}{{=str(clts.nombre_cliente).capitalize()[-1:]}}
+                                                        </div>
+                                                    </div>
+                                                {{pass}}
+                                            </div>
+                                            <div class="users-list-body">
+                                                <div>
+                                                    <div class="izquierdaFloat">
+                                                        <h6>{{=str(clts.nombre_cliente).capitalize()}}</h6>
+                                                        <p><span class="material-icons">check_circle</span>  {{=fechaFormato(clts.fecha_creacion_cliente,'fecha')}} | {{=fechaFormato(clts.hora_creacion_cliente,'hora')}}</p>
+                                                    </div>
+                                                    <div class="chat-action-btns me-2 derechaFloat">
+                                                        <div class="chat-action-col">
+                                                            <a class="#" href="#" data-bs-toggle="dropdown">
+                                                                <i class="fas fa-ellipsis-h"></i>
+                                                            </a>
+                                                            <div class="dropdown-menu dropdown-menu-end">
+                                                                <a href="javascript:template.showModal('edicionCliente','{{=str(clts.nombre_cliente).capitalize()}}','{{=clts.id}}');" class="dropdown-item dream_profile_menu">Editar <span><i class="far fa-edit"></i></span></a>
+                                                                {{ if clts.estado_cliente == 'True' :}}
+                                                                    <a href="javascript:template.updateEstado('cliente','{{=clts.id}}',1);" class="dropdown-item">Inactivar <span><i class="far fa-thumbs-down"></i></span></a>
+                                                                {{else:}}
+                                                                    <a href="javascript:template.updateEstado('cliente','{{=clts.id}}',0);" class="dropdown-item">Activar <span><i class="far fa-thumbs-up"></i></span></a>
+                                                                {{pass}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {{pass}}
+                                {{else:}}
+                                    <li class="user-list-item">
+                                        <div>
+                                            <div class="avatar avatar-offline">
+                                                <div class="letter-avatar">
+                                                    N
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="users-list-body">
+                                            <div>
+                                                <h5>No hay clientes creados</h5>
+                                                <p><span class="material-icons">check_circle</span>  {{=str(request.now)[:16]}}</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {{pass}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="text-center titulo">
+                                Listado segmentos
+                            </div>
+                        </div>
+                        <div class="card-body" id="listClientesDiv"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

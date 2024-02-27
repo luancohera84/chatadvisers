@@ -1,0 +1,83 @@
+{{extend rederHtmlPrincipal()}}
+{{#=idCliente}}
+<input type="hidden" value="{{=idCliente}}" id="chatServicio">
+<input type="hidden" value="0" id="pageChats">
+<div id="listaChatEmpresa">
+    <div class="sidebar-group left-sidebar chat_sidebar">
+
+        <div id="chats" class="left-sidebar-wrap sidebar active slimscroll">
+            <div class="slimscroll">
+    
+                <div class="left-chat-title d-flex justify-content-between align-items-center">
+                    <div class="chat-title">
+                        <h6>Listado chats xxxxxxxx</h6>
+                    </div>
+                </div>
+                <!-- <div class="search_chat has-search">
+                    <span class="fas fa-search form-control-feedback"></span>
+                    <input class="form-control chat_input" id="searchClienteListado" onkeyup="template.searchClientesList();" type="text" placeholder="Buscar cliente">
+                </div> -->
+    
+                <div class="sidebar-body" id="chatsidebar">
+    
+                    <div class="left-chat-title d-flex justify-content-between align-items-center ps-0 pe-0" style="margin-top:-30px;">
+                    </div>
+                    <ul class="user-list mt-2">
+                        <li class="user-list-item cursorNone">
+                            <div>
+                                <div class="avatar avatar-offline">
+                                    <div class="letter-avatar">
+                                        SC
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="users-list-body">
+                                <div>
+                                    <h6>Sin iniciar chats</h6>
+                                    <p><span class="material-icons">check_circle</span>  {{=str(request.now)[:16]}}</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="chat hide" id="middle">
+        <div class="slimscroll">
+            <div class="chat-header">
+                <div class="user-details">
+                    <div class="d-lg-none ms-2">
+                        <ul class="list-inline mt-2 me-2">
+                            <li class="list-inline-item">
+                                <a class="text-muted px-0 left_side" href="#" data-chat="open">
+                                    <i class="fas fa-arrow-left"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <figure class="avatar ms-1">
+                        <img src="{{=URL('static','template/base/assets/img/logo.png')}}" class="rounded-circle"
+                            alt="image">
+                    </figure>
+                    <div class="mt-1">
+                        <h5 id="nombreBodyChatCliente">xxxxxxxx</h5>
+                        <small class="online">
+                            xxxxxxxxx           
+                        </small>
+                    </div>
+                </div>
+                <div class="chat-options"></div>
+                <div class="chat-search"></div>
+    
+            </div>
+            <div class="chat-body">
+                No hay chat para atender
+            </div>
+        </div>
+        <div class="chat-footer"></div>
+    </div>
+</div>
+{{block page_js}}
+    <script src="{{=URL('static','js/asesor/dashboard.js')}}"></script>
+{{end page_js}}

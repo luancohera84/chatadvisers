@@ -1,0 +1,8 @@
+####
+Para lanzar servidor web2py local
+    python3 var/www/web2py/web2py.py -p 9000 -a Ab1g3l2@12 -i 0.0.0.0
+
+
+###
+Para lanzar servidor RT
+    python3 /var/www/chatAdmin/tr/apps/websocket_messaging.py -k chatBotAsesores -s /etc/letsencrypt/live/chatadvisers.intelibpo.com/privkey.pem -c /etc/letsencrypt/live/chatadvisers.intelibpo.com/fullchain.pem

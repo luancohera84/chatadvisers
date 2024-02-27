@@ -1,0 +1,167 @@
+{{extend rederHtmlPrincipal()}}
+<div class="sidebar-group left-sidebar chat_sidebar">
+
+    <div id="chats" class="left-sidebar-wrap sidebar active slimscroll">
+        <div class="slimscroll">
+            <div class="left-chat-title d-flex justify-content-between align-items-center">
+                <div class="chat-title">
+                    <h4>{{=str(response.suBtitle).capitalize()}}</h4>
+                </div>
+            </div>
+            <div class="search_chat has-search">
+                <span class="fas fa-search form-control-feedback"></span>
+                <input class="form-control chat_input" id="search-empresa" type="text" placeholder="Buscar Usuario">
+            </div>
+            <div class="sidebar-body" id="chatsidebar">
+                <div class="left-chat-title d-flex justify-content-between align-items-center ps-0 pe-0">
+                    <div class="chat-title">
+                        <h4>{{=str(response.title).capitalize()}}</h4>
+                    </div>
+                    <div class="add-section">
+                        <a href="javascript:template.showModal('newUsuario','nombreUusarioo',0);"><i class="fas fa-plus"></i></a>
+                    </div>
+                </div>
+                <ul class="user-list mt-2">
+                    {{ if userType[0] ==  'Gerente': }}
+                        {{ if len(listUsers) > 0: }}
+                            {{ for usrt in  listUsers:}}
+                                <li class="user-list-item" id="usuarioLi_{{=usrt['id']}}">
+                                    <div>
+                                        {{if usrt['registration_key'] :}}
+                                            <div class="avatar avatar-offline">
+                                                <div class="letter-avatar" onclick="usus.verInfoUsuario( '{{=usrt['id']}}','{{=str(usrt['first_name']).capitalize()}} {{=str(usrt['last_name']).capitalize()}}','{{=usrt['email']}}' )">
+                                                    {{=str(usrt['first_name']).capitalize()[:1]}}
+                                                </div>
+                                            </div>
+                                        {{else:}}
+                                            <div class="avatar avatar-online">
+                                                <div class="letter-avatar" onclick="usus.verInfoUsuario('{{=usrt['id']}}','{{=str(usrt['first_name']).capitalize()}} {{=str(usrt['last_name']).capitalize()}}','{{=usrt['email']}}')">
+                                                    {{=str(usrt['first_name']).capitalize()[:1]}}
+                                                </div>
+                                            </div>
+                                        {{pass}}
+                                    </div>
+                                    <div class="users-list-body">
+                                        <div>
+                                            <h5>{{=str(usrt['first_name']).capitalize()}} {{=str(usrt['last_name']).capitalize()}}</h5>
+                                            <p><span class="material-icons">check_circle</span> {{=usrt['tipo'][0]}}</p>
+                                        </div>
+                                        <div class="chat-action-btns me-2">
+                                            <div class="chat-action-col">
+                                                <a class="#" href="#" data-bs-toggle="dropdown">
+                                                    <i class="fas fa-ellipsis-h"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <a href="javascript:template.showModal('edicionUsuario','{{=str(usrt['first_name']).capitalize()}} {{=str(usrt['last_name']).capitalize()}}','{{=usrt['id']}}');" class="dropdown-item dream_profile_menu">Editar <span><i class="far fa-edit"></i></span></a>
+                                                    {{ if usrt['registration_key'] :}}
+                                                        <a href="javascript:template.updateEstado('usuario','{{=usrt['id']}}',0)" class="dropdown-item">Activar <span><i class="far fa-thumbs-up"></i></span></a>
+                                                    {{else:}}
+                                                        <a href="javascript:template.updateEstado('usuario','{{=usrt['id']}}',1)" class="dropdown-item">Inactivar <span><i class="far fa-thumbs-down"></i></span></a>
+                                                    {{pass}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            {{pass}}
+                        {{else:}}
+                            <li class="user-list-item">
+                                <div>
+                                    <div class="avatar avatar-offline">
+                                        <div class="letter-avatar">
+                                            N
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="users-list-body">
+                                    <div>
+                                        <h5>No hay usuarios creados/asignados</h5>
+                                        <p><span class="material-icons">check_circle</span>  {{=str(request.now)[:16]}}</p>
+                                    </div>
+                                </div>
+                            </li>   
+                        {{pass}}
+                    {{else:}}
+                        {{ if len(listUsers) > 0: }}
+                            {{ for usrt in  listUsers:}}
+                                <li class="user-list-item" id="usuarioLi_{{=usrt.id}}">
+                                    <div>
+                                        {{ if usrt.registration_key :}}
+                                            <div class="avatar avatar-offline">
+                                                <div class="letter-avatar" onclick="usus.verInfoUsuario( '{{=usrt.id}}','{{=str(usrt.first_name).capitalize()}} {{=str(usrt.last_name).capitalize()}}','{{=usrt.email}}' )">
+                                                    {{=str(usrt.first_name).capitalize()[:1]}}
+                                                </div>
+                                            </div>
+                                        {{else:}}
+                                            <div class="avatar avatar-online">
+                                                <div class="letter-avatar" onclick="usus.verInfoUsuario( '{{=usrt.id}}','{{=str(usrt.first_name).capitalize()}} {{=str(usrt.last_name).capitalize()}}','{{=usrt.email}}')">
+                                                    {{=str(usrt.first_name).capitalize()[:1]}}
+                                                </div>
+                                            </div>
+                                        {{pass}}
+                                    </div>
+                                    <div class="users-list-body">
+                                        <div>
+                                            <h5>{{=str(usrt.first_name).capitalize()}} {{=str(usrt.last_name).capitalize()}}</h5>
+                                            <p><span class="material-icons">check_circle</span> {{=usrt.tipo[0]}}</p>
+                                        </div>
+                                        <div class="chat-action-btns me-2">
+                                            <div class="chat-action-col">
+                                                <a class="#" href="#" data-bs-toggle="dropdown">
+                                                    <i class="fas fa-ellipsis-h"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <a href="javascript:template.showModal('edicionUsuario','{{=str(usrt.first_name).capitalize()}} {{=str(usrt.last_name).capitalize()}}','{{=usrt.id}}');" class="dropdown-item dream_profile_menu">Editar <span><i class="far fa-edit"></i></span></a>
+                                                    {{ if usrt.registration_key :}}
+                                                        <a href="javascript:template.updateEstado('usuario','{{=usrt.id}}',0)" class="dropdown-item">Activar <span><i class="far fa-thumbs-up"></i></span></a>
+                                                    {{else:}}
+                                                        <a href="javascript:template.updateEstado('usuario','{{=usrt.id}}',1)" class="dropdown-item">Inactivar <span><i class="far fa-thumbs-down"></i></span></a>
+                                                    {{pass}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            {{pass}}
+                        {{else:}}
+                            <li class="user-list-item">
+                                <div>
+                                    <div class="avatar avatar-offline">
+                                        <div class="letter-avatar">
+                                            N
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="users-list-body">
+                                    <div>
+                                        <h5>No hay usuarios creados</h5>
+                                        <p><span class="material-icons">check_circle</span>  {{=str(request.now)[:16]}}</p>
+                                    </div>
+                                </div>
+                            </li>   
+                        {{pass}}
+                    {{pass}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cuerpo chat -->
+<div class="chat" id="middle-usuarios">
+    <div class="slimscroll">
+        <div class="chat-header card-header">
+            <h6 class="text-center titulo">
+                Información del usuario seleccionado
+            </h6>
+        </div>
+        <div class="chat-body">
+            <div class="messages">
+                <div class="chats"></div>
+        </div>
+    </div>
+</div>
+
+{{block page_js}}
+    <script src="{{=URL('static','js/usuarios/listado.js')}}"></script>
+{{end page_js}}

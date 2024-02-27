@@ -1,0 +1,92 @@
+{{ if len(tipoTipificaciones) > 0:}}
+    <div id="bodyPreloadsFormularioValidate" class="hide">
+        <p align="center" style="font-size:13px;text-align:center;overflow: hidden;">
+            <b>Un momento por favor <br>
+                Estamos validando el resultado seleccionado
+            </b>
+            <br><br>
+            <i class="fa fa-spinner fa-spin"  style="font-size:35px;color:#5A078B;text-align:center;"></i>
+        </p>
+    </div>
+    <div class="card card-custom example example-compact">
+        <div class="card-header" id="idHeaderListResultado">
+            <div class="izquierdaFloat">
+                <h6 style="margin-top:5px;" align="center">Seleccione una tipificación para guardar la gestión</h6>
+            </div>
+        </div>
+        <div class="card-header hide" id="idHeaderListResumen">
+            <div class="izquierdaFloat">
+                <h6 style="margin-top:5px;" align="center" id="resultadoTitle"></h6>
+            </div>
+            <div class="derechaFloat">
+                <i class="fas fa-arrow-left text-while cursor" onclick="$('#divResumenTipificacion,#idHeaderListResumen').hide();$('#listTiificacion,#idHeaderListResultado').show();" style="font-size:20px;" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="Regresar"></i>&nbsp;&nbsp;
+                <i class="fas fa-money-bill-alt text-while cursor" onclick="ases.cargaOfertasResultado();" style="font-size:20px;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver ofertas" id="btnOfertaResultado"></i>&nbsp;&nbsp;
+                <i class="fas fa-save text-while cursor" onclick="ases.cerrarGestion();" style="font-size:20px;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Guardar gestión"></i>&nbsp;&nbsp;
+                <i class="fas fa-window-close text-while cursor hide"  id="cerrarBtnOfertas" onclick="ases.cerrarOfertas();" style="font-size:20px;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cerrar ofertas"></i>&nbsp;&nbsp;
+                
+            </div>
+        </div>
+        <div class="card-body" id="listTiificacion">
+            <!-- <h6 align="center">Seleccione una tipificación para guardar la gestión</h6>
+            <hr> -->
+            <ul class="user-list mt-2">
+                <div class="row">
+                    {{for tipTip in  tipoTipificaciones: }}
+                        <div class="col-3">
+                            <li class="cardTipi" onclick="ases.validarFormularioGestion('{{=tipTip['descripcion']}}','{{=tipTip['idResultado']}}');">
+                                <div class="users-list-body">
+                                    <div>
+                                        <h6 class="textOfertaViews">{{=tipTip['descripcion']}}</h6>
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+                    {{pass}}
+                </div>
+            </ul>
+        </div>
+        <div class="card-body hide" id="divResumenTipificacion">
+            <div class="row">
+                <div class="col-lg-12" id="divInfoFormularioComet">
+                    <div class="col-lg-12 hide" id="divFormularisTipificado">
+                        <div>
+                          <form id="formularisTipificadocampos">
+                            <div class="row" id="divCuerpoFormulario">
+                            </div>
+                          </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 hide" id="moduleComentarios">
+                      <label><b>Comentarios de la gestión</b></label>
+                      <textarea class="form-control" id="comentariosGestion" name="comentariosGestion" maxlength="200000000" minlength="1" rows="5"></textarea>
+                      <span class="form-text text-muted">Comentarios de la gestión</span>
+                    </div>
+                </div>
+                <div class="col-lg-4 hide" id="divListOfertas">
+                    <div id="canalResultado" class="hide"></div>
+                    <div id="ofertaUnicaResultado">
+                        <div class="about-media-tabs">
+                            <nav>
+                                <div class="nav nav-tabs justify-content-end" id="nav-tabResult"></div>
+                            </nav>
+                            <div class="tab-content" id="nav-tabContent">
+                                <div class="tab-pane fade show active" id="about">
+                                    <p class="textOfertaViewsResultados" align="justify">Asesor recuerde que la infomacion aca mostrada corresponde a la ultima cargada a el cliente.</p>
+                                    <hr>
+                                    <div class="member-details" style="margin-top:-10px;">
+                                        <ul id="ulNabTabOfertaResultado"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{{else:}}
+    <h6 align="center">El segmento gestionado no tiene resultados de gestión</h6>
+    <hr>
+    <p align='center'><b>Por favor informe a su gerente de cuenta para gestionar los resultados de este segmento.</b></p>
+{{pass}}

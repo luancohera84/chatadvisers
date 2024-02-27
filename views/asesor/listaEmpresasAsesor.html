@@ -1,0 +1,24 @@
+<ul id="idUlEmpresasChatAsesor_{{=varDatos.idUser}}">
+    {{ listEmpreAsigTemplate = empresasChatAsesorAsi( varDatos.idUser )}}
+    {{ if len(listEmpreAsigTemplate) > 0 :}}
+        {{ for item in listEmpreAsigTemplate :}}
+            {{idEmpresa = item["idEmpresa"]}}
+            {{nomEmpresa = str(item['nombreEmpresa']).capitalize()}}
+            <a  href="{{=URL('asesor','listaChatEmpresa?prem=%s&atrg=%s&mena=%s')%(idEmpresa,varDatos.idUser,nomEmpresa)}}" data-bs-toggle="tooltip"
+            data-bs-placement="top" title="{{=nomEmpresa}}">
+            <!--a  href="{{=URL('asesor','listaChatEmpresa', args=[idEmpresa,varDatos.idUser])}}"-->
+                <li>
+                    <div class="liAse" style="background-color:{{=item['colorFondo']}};color: #FFFFFF;" id="divAvatarEmpresaAsesor_{{=varDatos.idUser}}">
+                        <div class="avatar avatar-online">
+                            <div class="letter-avatar liAse">
+                                {{=str(item['nombreEmpresa']).capitalize()[:1]}}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </a>
+            <br>
+        {{pass}}
+    {{pass}}
+</ul>
+

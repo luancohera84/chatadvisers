@@ -1,0 +1,1212 @@
+{{block head}}
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" /> -->
+    <style>
+        .inputLower{
+            text-transform: lowercase;
+        }
+    </style>
+{{end}}
+<div class="about-media-tabs">
+    <nav>
+        <div class="nav nav-tabs justify-content-end" id="nav-tab">
+            <a class="nav-item nav-link" id="nav-campos-tab" data-bs-toggle="tab" href="#campos" onclick="ger.clickFocusTab('campos','nav-campos-tab')">Conf. campos</a>
+            <a class="nav-item nav-link" id="nav-horarios-tab" data-bs-toggle="tab" href="#horarios" onclick="ger.clickFocusTab('horarios','nav-horarios-tab')">Horarios</a>
+            <a class="nav-item nav-link" id="nav-smsPrestNab-tab" data-bs-toggle="tab" href="#smsPrestNab" onclick="ger.clickFocusTab('smsPrestNab','nav-smsPrestNab-tab')">Sms preestablecidos</a>
+            <a class="nav-item nav-link" id="nav-confgResultados-tab" data-bs-toggle="tab" href="#confgResultados" onclick="ger.clickFocusTab('confgResultados','nav-confgResultados-tab')">Confg. resultados</a>
+            <a class="nav-item nav-link" id="nav-capturaInfo-tab" data-bs-toggle="tab" href="#capturaInfo" onclick="ger.clickFocusTab('capturaInfo','nav-capturaInfo-tab')">Captura de info.</a>
+            <a class="nav-item nav-link" id="nav-puntosPago-tab" data-bs-toggle="tab" href="#puntosPago" onclick="ger.clickFocusTab('puntosPago','nav-puntosPago-tab')">Puntos de pago</a>
+            <a class="nav-item nav-link" id="nav-contextosBot-tab" data-bs-toggle="tab" href="#contextosBot" onclick="ger.clickFocusTab('contextosBot','nav-contextosBot-tab')">ChatBot</a>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade" id="campos">
+            <p class="textOfertaViews" align="justify">Recuerde que los campos configurados aqui son los que vera el asesor a la hora de gestionar a un cliente.</p>
+            <hr>
+            <div class="member-details" style="margin-top:-10px;">
+                <ul class="user-list mt-2">
+                    <div class="row">
+                        {{for camps in  listadoCamposOferta: }}
+                            {{ if not str(camps).replace('"','').replace(',','') in textNoPicture :}}
+                                {{nomCampoRes = str(camps).replace('"','').replace(',','').replace('empresa_strauss','Nombre empresa').replace('cliente_strauss','Nombre cliente').replace('segmento_strauss','Nombre segmento').capitalize()}}
+                                {{nomCampoReal = str(camps).replace('"','').replace(',','')}}
+                                {{ campoMostrar = setValidateCampoAsignado( data.idSegmento, nomCampoReal ) }}
+                                {{ if campoMostrar != 0 :}}
+                                    <div class="col-3" data-bs-toggle="tooltip"  data-bs-placement="top" title="Texto original: {{=str(nomCampoReal).capitalize()}}">
+                                        <li class="cardTipi" style="background-color:#e8f9f8;" onclick="ger.asignarCampoSegmento('{{=data.idSegmento}}','{{=campoMostrar}}','{{=nomCampoReal}}',1);">
+                                            <div class="users-list-body">
+                                                <div>
+                                                    <h6 class="textOfertaViews">{{=str(campoMostrar).replace('_',' ').capitalize()}}</h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </div>
+                                {{else:}}
+                                    <div class="col-3">
+                                        <li class="cardTipi" onclick="ger.asignarCampoSegmento('{{=data.idSegmento}}','{{=nomCampoRes}}','{{=nomCampoReal}}',0);">
+                                            <div class="users-list-body">
+                                                <div>
+                                                    <h6 class="textOfertaViews">{{=str(camps).replace('"','').replace(',','').capitalize()}}</h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </div>
+                                {{pass}}
+                            {{pass}}
+                        {{pass}}
+                    </div>
+                </ul>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="horarios">
+            <p class="textOfertaViews" align="justify">Recuerde que el horario acá configurado sera el que se le informara a el cliente.</p>
+            <hr>
+            <div class="member-details" style="margin-top:-10px;">
+                <ul id="ulNabTabOferta"></ul>
+            </div>
+            <div class="social-media-col">
+                <div id="divIdTableRegHor">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <div class="derechaFloat">
+                                <a href="javascript:ger.nuevoHorario();" class="btn btn-icon btn-success">
+                                    <i class="fas fa-plus text-while" style="font-size:17px;"></i>
+                                </a>
+                            </div>
+                            <thead class="borderCard">
+                                <tr>
+                                    <th class="">Nombre</th>
+                                    <th class="text-center">Dia</th>
+                                    <th class="text-center">Dia laborable</th>
+                                    <th class="text-center">Hora inicial</th>
+                                    <th class="text-center">Hora fin</th>
+                                    <th class="text-center">Festivos</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="idTbodyListGestiones">
+                                {{for info in listadoHorarios:}}
+                                    <tr>
+                                        <td class="">{{=str(info.nombre_horario).capitalize()}}</td>
+                                        <td class="text-center">{{=info.dia_inicio}}</td>
+                                        {{ if info.dia_laborable == 1 :}}
+                                            <td class="text-center">
+                                                <i class="fas fa-thumbs-up text-success" style="font-size:17px;"></i>
+                                            </td>
+                                        {{else:}}
+                                            <td class="text-center">
+                                                <i class="far fa-thumbs-down text-danger" style="font-size:17px;"></i>
+                                            </td>
+                                        {{pass}}
+                                        <td class="text-center">{{=info.hora_inicio}}</td>
+                                        <td class="text-center">{{=info.hora_fin}}</td>
+                                        <td class="text-center">{{=info.dias_festivos}}</td>
+                                        <td class="text-center">
+                                            <a href="javascript:ger.editarInfoHorario('{{=info.id}}','{{=str(info.nombre_horario).capitalize()}}','{{=info.dia_inicio}}','{{=info.dias_festivos}}','{{=info.hora_inicio}}','{{=info.hora_fin}}','{{=info.dia_laborable}}');">
+                                                <i class="fas fa-edit text-primary" style="font-size:17px;"></i>
+                                            </a>
+                                            &nbsp;&nbsp;
+                                            <a href="javascript:template.updateEstado('horario','{{=info.id}}',1);">
+                                                <i class="fas fa-trash-alt text-danger" style="font-size:17px;"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {{pass}}
+                            </tbody>
+                        </table> 
+                    </div>
+                </div>
+                <div id="divIdRegitroHorSeg" class="hide">
+                    <div class="card card-custom example example-compact">
+                        <div class="card-header">
+                            <div class="izquierdaFloat">
+                                <h6 style="margin-top:5px;color:#FFFFFF !important;">Nuevo horario</h6>
+                            </div>
+                            <div class="derechaFloat">
+                                <a href="javascript:ger.regresarNuevoHorario();" class="btn btn-icon btn-primary">
+                                    <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col col-lg-4">
+                                    <label class="col-form-label">Nombre horario</label>
+                                    <input type="text" name="nomHorario" id="nomHorario" class="form-control" placeholder="Nombre horario">
+                                </div>
+                                <div class="col col-lg-4">
+                                    <label class="col-form-label">Dia incio</label>
+                                    <select name="diaInicio" id="diaInicio" class="form-control">
+                                        <option value="">Seleccione un dia</option>
+                                        <option value="Lunes">Lunes</option>
+                                        <option value="Martes">Martes</option>
+                                        <option value="Miercoles">Miercoles</option>
+                                        <option value="Jueves">Jueves</option>
+                                        <option value="Viernes">Viernes</option>
+                                        <option value="Sabado">Sabado</option>
+                                        <option value="Domingo">Domingo</option>
+                                    </select>
+                                </div>
+                                <div class="col col-lg-4">
+                                    <label class="col-form-label">Loborable</label>
+                                    <select name="diaLaborable" id="diaLaborable" class="form-control" onchange="ger.diaLaborable($(this));">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="1">Si</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row" id="divRowHorariosFestivos">
+                                <div class="col col-lg-4">
+                                    <label class="col-form-label">Hora incio</label>
+                                    <input type="text" name="horaIncio" id="horaIncio" class="validate picker__input form-control timepicker" placeholder="Click aquí para tu hora inicial" >
+                                    <span class="form-text text-muted">Tener presente este formato (24 Horas): <code>HH:MM</code></span>
+                                </div>
+                                <div class="col col-lg-4">
+                                    <label class="col-form-label">Hora fin</label>
+                                    <input type="text" name="horaFin" id="horaFin" class="validate picker__input form-control timepicker" placeholder="Click aquí para tu hora final" >
+                                    <span class="form-text text-muted">Tener presente este formato (24 Horas): <code>HH:MM</code></span>
+                                </div>
+                                <div class="col col-lg-4">
+                                    <label class="col-form-label">Incluir dias festivos</label>
+                                    <select name="diaFestivos" id="diaFestivos" class="form-control">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="Si">Si</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="derechaFloat">
+                                <a href="javascript:ger.guardarHorario();" class="btn btn-icon btn-success">
+                                    Guardar horario
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="divEitarHorSeg" class="hide">
+                    <div class="card card-custom example example-compact">
+                        <div class="card-header">
+                            <div class="izquierdaFloat">
+                                <h6 style="margin-top:5px;color:#FFFFFF !important;">Editar horario</h6>
+                            </div>
+                            <div class="derechaFloat">
+                                <a href="javascript:$('#divEitarHorSeg').hide();$('#divIdTableRegHor').show();" class="btn btn-icon btn-primary">
+                                    <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col col-lg-4">
+                                    <label class="col-form-label">Nombre horario</label>
+                                    <input type="text" name="nomHorarioEditar" id="nomHorarioEditar" class="form-control" placeholder="Nombre horario">
+                                </div>
+                                <input type="hidden" id="idHorarioEdit">
+                                <div class="col col-lg-4">
+                                    <label class="col-form-label">Dia incio</label>
+                                    <select name="diaInicioEditar" id="diaInicioEditar" class="form-control">
+                                        <option value="">Seleccione un dia</option>
+                                        <option value="Lunes">Lunes</option>
+                                        <option value="Martes">Martes</option>
+                                        <option value="Miercoles">Miercoles</option>
+                                        <option value="Jueves">Jueves</option>
+                                        <option value="Viernes">Viernes</option>
+                                        <option value="Sabado">Sabado</option>
+                                        <option value="Domingo">Domingo</option>
+                                    </select>
+                                </div>
+                                <div class="col col-lg-4">
+                                    <label class="col-form-label">Loborable</label>
+                                    <select name="diaLaboraEditar" id="diaLaboraEditar" class="form-control">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="1">Si</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-4">
+                                    <label class="col-form-label">Hora incio</label>
+                                    <input type="text" name="horaIncioEditar" id="horaIncioEditar" class="validate picker__input form-control timepicker" placeholder="Click aquí para tu hora inicial" >
+                                    <span class="form-text text-muted">Tener presente este formato (24 Horas): <code>HH:MM</code></span>
+                                </div>
+                                <div class="col col-lg-4">
+                                    <label class="col-form-label">Hora fin</label>
+                                    <input type="text" name="horaFinHrEditar" id="horaFinHrEditar" class="validate picker__input form-control timepicker" placeholder="Click aquí para tu hora final" >
+                                    <span class="form-text text-muted">Tener presente este formato (24 Horas): <code>HH:MM</code></span>
+                                </div>
+                                <div class="col col-lg-4">
+                                    <label class="col-form-label">Incluir dias festivos</label>
+                                    <select name="diaFestivosEditar" id="diaFestivosEditar" class="form-control">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="Si">Si</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="derechaFloat">
+                                <a href="javascript:ger.actualizarHorario();" class="btn btn-icon btn-success">
+                                    Actualizar horario
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="smsPrestNab">
+            <p class="textOfertaViews" align="justify">Recuerde que los sms acá configurados son los que vera el asesor/cliente a la hora de una conversación.</p>
+            <hr>
+            <div class="member-details" style="margin-top:-10px;">
+                <ul id="ulNabTabOferta"></ul>
+            </div>
+            <div class="social-media-col">
+                <div id="divIdTableRegSmsPres">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <div class="derechaFloat">
+                                <a href="javascript:ger.nuevoSmsPrest();" class="btn btn-icon btn-success">
+                                    <i class="fas fa-plus text-while" style="font-size:17px;"></i>
+                                </a>
+                            </div>
+                            <thead class="borderCard" _style="display:block;">
+                                <tr>
+                                    <th class="">Nombre</th>
+                                    <th class="text-center">Tipo</th>
+                                    <th class="text-center">Sms</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="idTbodyListSmsPrest" _style="height:350px; overflow-y:scroll; display:block;">
+                                {{for infoSms in listadoSmsPrest:}}
+                                    <tr>
+                                        <td class="">{{=str(infoSms.nombre_sms).capitalize()}}</td>
+                                        <td class="text-center">{{=infoSms.tipo_sms}}</td>
+                                        <td class="text-center">
+                                            <p align="justify">
+                                                {{=infoSms.sms}}
+                                            </p>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="javascript:ger.editarInfoSms('{{=infoSms.id}}','{{=str(infoSms.nombre_sms).capitalize()}}','{{=infoSms.tipo_sms}}','{{=infoSms.sms}}');">
+                                                <i class="fas fa-edit text-primary" style="font-size:17px;"></i>
+                                            </a>
+                                            &nbsp;&nbsp;
+                                            <a href="javascript:template.updateEstado('smsPrest','{{=infoSms.id}}',1);">
+                                                <i class="fas fa-trash-alt text-danger" style="font-size:17px;"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {{pass}}
+                            </tbody>
+                        </table> 
+                    </div>
+                </div>
+                <div id="divIdRegitroSmsPresSeg" class="hide">
+                    <div class="card card-custom example example-compact">
+                        <div class="card-header">
+                            <div class="izquierdaFloat">
+                                <h6 style="margin-top:5px;color:#FFFFFF !important;">Nuevo sms preestablecido</h6>
+                            </div>
+                            <div class="derechaFloat">
+                                <a href="javascript:ger.regresarNuevoSmsPrest();" class="btn btn-icon btn-primary">
+                                    <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col col-lg-6">
+                                    <label class="col-form-label">Nombre sms preestablecido</label>
+                                    <input type="text" name="nomSmsPrest" id="nomSmsPrest" class="form-control" placeholder="Nombre sms preestablecido">
+                                </div>
+                                <div class="col col-lg-6">
+                                    <label class="col-form-label">Tipo sms preestablecido</label>
+                                    <select name="tipoSmsPrest" id="tipoSmsPrest" class="form-control">
+                                        <option value="">Seleccione un tipo</option>
+                                        <option value="Asesor">Asesor</option>
+                                        <option value="Horario">Horario</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-12">
+                                    <label class="col-form-label">Cuerpo sms preestablecido</label>
+                                    <textarea name="smsPrest" id="smsPrest" maxlength="3000" minlength="1" cols="30" rows="10" class="form-control" placeholder="Tener presente el maximo de caracteres permitido es: 3.000"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="derechaFloat">
+                                <a href="javascript:ger.guardarSmsPrest();" class="btn btn-icon btn-success">
+                                    Guardar sms
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="divEitarSmsPresSeg" class="hide">
+                    <div class="card card-custom example example-compact">
+                        <div class="card-header">
+                            <div class="izquierdaFloat">
+                                <h6 style="margin-top:5px;color:#FFFFFF !important;">Editar sms preestablecido</h6>
+                            </div>
+                            <div class="derechaFloat">
+                                <a href="javascript:$('#divEitarSmsPresSeg').hide();$('#divIdTableRegSmsPres').show();" class="btn btn-icon btn-primary">
+                                    <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <input type="hidden" id="idSmsEdit">
+                            <div class="row">
+                                <div class="col col-lg-6">
+                                    <label class="col-form-label">Nombre sms preestablecido</label>
+                                    <input type="text" name="nomSmsPrestEdit" id="nomSmsPrestEdit" class="form-control" placeholder="Nombre sms preestablecido">
+                                </div>
+                                <div class="col col-lg-6">
+                                    <label class="col-form-label">Tipo sms preestablecido</label>
+                                    <select name="tipoSmsPrestEdit" id="tipoSmsPrestEdit" class="form-control">
+                                        <option value="Asesor">Asesor</option>
+                                        <option value="Horario">Horario</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-12">
+                                    <label class="col-form-label">Cuerpo sms preestablecido</label>
+                                    <textarea name="smsPrestEdit" id="smsPrestEdit" maxlength="3000" minlength="1" cols="30" rows="10" class="form-control" placeholder="Tener presente el maximo de caracteres permitido es: 3.000"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="derechaFloat">
+                                <a href="javascript:ger.actualizarSmsPrest();" class="btn btn-icon btn-success">
+                                    Actualizar sms
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="confgResultados">
+            <p class="textOfertaViews" align="justify">Recuerde que los resultados acá configurados son los que vera el asesor/cliente a la hora de cerrar la gestión.</p>
+            <hr>
+            <div class="member-details" style="margin-top:-10px;">
+                <ul id="ulNabTabOferta"></ul>
+            </div>
+            <div class="social-media-col">
+                <div id="divIdTableConfigRes">
+                    <div class="col col-lg-12 mb-3" style="margin-top:15px !important;">
+                        <div class="member-details" style="margin-top:-5px;">
+                            <ul class="user-list mt-2" s_tyle="height:400px; overflow-y: auto;">
+                                <div class="row" id="bodyCargaResultadosConf">
+                                    {{ if len(listadoRusltados) > 0 :}}
+                                        {{ for resVal in listadoRusltados :}}
+                                            {{idResultado = resVal['idResultado']}}
+                                            {{descripcion = resVal['descripcion']}}
+                                            {{ datResul = validateResultadoSegmentos( data.idSegmento, idResultado ) }}
+                                            {{if int(datResul) > 0  :}}
+                                                {{smsTol = 'Click para quitar el resultado: '+str(descripcion)+' del formulario'}}
+                                                {{style = 'background-color:#e8f9f8;'}}
+                                                {{texPreloads = 'Estamos removiendo el resultado'}}
+                                            {{else:}}
+                                                {{smsTol = 'Click para quitar el resultado: '+str(descripcion)+' del formulario'}}
+                                                {{style = ''}}
+                                                {{texPreloads = 'Estamos agregando el resultado'}}
+                                            {{pass}}
+                                            <div class="col-3" _data-bs-toggle="tooltip" _data-bs-placement="bottom" title="{{=smsTol}}">
+                                                <li class="cardTipiConfig" style="{{=style}}" onclick='chatBot.agregarQuitarResultadoConf("{{=idResultado}}", "{{=descripcion}}" ,"{{=data.idSegmento}}");'>
+                                                    <div class="users-list-body">
+                                                        <div id='liResultadoConfg_{{=idResultado}}'>
+                                                            <h6 class="textOfertaViews">{{=descripcion}}</h6>
+                                                        </div>
+                                                        <div id="bodyPreloadsConfg_{{=idResultado}}" class='hide'>
+                                                            <p align="center" style="font-size:10px;text-align:center;overflow: hidden;">
+                                                                <b>Un momento por favor <br>
+                                                                {{=texPreloads}}
+                                                                </b>
+                                                                <br>
+                                                                <i class="fa fa-spinner fa-spin"  style="font-size:25px;color:#5A078B;text-align:center;"></i>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </div>
+                                        {{pass}}
+                                    {{else:}}
+                                        <div class="col-12" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            En estos momentos no tenemos resultados para configurar. Revisa las honmologaciones de este segmento.
+                                        </div>
+                                    {{pass}}
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="capturaInfo">
+            <p class="textOfertaViews" align="justify">Recuerde que los formularios acá configurados son los que vera el asesor a la hora de realizar una tipificación.</p>
+            <hr>
+            <div class="member-details" style="margin-top:-10px;">
+                <ul id="ulNabTabOferta"></ul>
+            </div>
+            <div class="social-media-col">
+                <div class="row">
+                    <div class="col col-lg-12" id="divRegistrosFormularios">
+                        <div class="card card-custom example example-compact">
+                            <div class="card-header">
+                                <div class="izquierdaFloat">
+                                    <h6 style="margin-top:5px;color:#FFFFFF !important;">Formularios</h6>
+                                </div>
+                                <div class="derechaFloat">
+                                    <a href="javascript:chatBot.newFormularioSeg('{{=data.idSegmento}}');" class="btn btn-icon btn-success">
+                                        <i class="fas fa-plus text-while" style="font-size:17px;"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                {{ if len(listadoFormularios) > 0 :}}
+                                    <table class="table table-striped">
+                                        <thead class="borderCard">
+                                            <tr>
+                                                <th class="">Formulario</th>
+                                                <th class="text-center">Campos</th>
+                                                <th class="text-center">Resultados</th>
+                                                <th class="text-center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{for infoForm in listadoFormularios:}}
+                                                <tr>
+                                                    <td class="">{{=str(infoForm.nombre_formulario).capitalize()}}</td>
+                                                    <td class="text-center">
+                                                        {{#=infoForm.cantidad_campos}}
+                                                        <a href="javascript:chatBot.verCamposFormulario('{{=infoForm.id}}','{{=data.idSegmento}}');">
+                                                            <i class="fab fa-wpforms text-primary fa-2x"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <button type="button" class="btn btn-primary" onclick="chatBot.verResultadosFormulario('{{=infoForm.id}}','{{=data.idSegmento}}');">
+                                                            <span class="badge badge-success">{{=cantResultadosFormulario( infoForm.id )}}</span> Resultados
+                                                              <span class="sr-only">unread messages</span>
+                                                        </button>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{if infoForm.creador > 0 :}}
+                                                            <a href="javascript:ger.editarInfoForm('{{=infoForm.id}}','{{=str(infoForm.nombre_formulario).capitalize()}}'');">
+                                                                <i class="fas fa-edit text-primary" style="font-size:17px;"></i>
+                                                            </a>
+                                                            &nbsp;&nbsp;
+                                                            <a href="javascript:template.updateEstado('formPrest','{{=infoForm.id}}',1);">
+                                                                <i class="fas fa-trash-alt text-danger" style="font-size:17px;"></i>
+                                                            </a>
+                                                        {{pass}}
+                                                    </td>
+                                                </tr>
+                                            {{pass}}
+                                        </tbody>
+                                    </table> 
+                                {{else:}}
+                                    <p>Es estos momentos no tienes formularios.</p>
+                                {{pass}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-lg-12 hide" id="divResultadosFormularios">
+                        <div class="card card-custom example example-compact">
+                            <div class="card-header">
+                                <div class="izquierdaFloat">
+                                    <h6 style="margin-top:5px;color:#FFFFFF !important;">Listado resultados</h6>
+                                </div>
+                                <div class="derechaFloat">
+                                    <a href="javascript:$('#divResultadosFormularios').hide();$('#divRegistrosFormularios').show();" class="btn btn-icon btn-primary">
+                                        <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                    </a>
+                                    <a href="javascript:chatBot.showPasoToPasoResulForm();" class="btn btn-icon btn-primary">
+                                        <i class="fas fa-info-circle text-while" style="font-size:17px;"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body" id="idBodyResultadosFormularios" style="background-color:#0000000d;">    
+                                <div id="bodyPreloadsFortmulario" class="hide">
+                                    <p align="center" style="font-size:13px;text-align:center;overflow: hidden;">
+                                        <b>Un momento por favor <br>
+                                            Estamos cargando los resultados
+                                        </b>
+                                        <br><br>
+                                        <i class="fa fa-spinner fa-spin"  style="font-size:35px;color:#5A078B;text-align:center;"></i>
+                                    </p>
+                                </div>
+                                <div class="col col-lg-12 mb-3" style="margin-top:15px !important;">
+                                    <div class="member-details" style="margin-top:-5px;">
+                                        <ul class="user-list mt-2" s_tyle="height:400px; overflow-y: auto;">
+                                            <div class="row" id="bodyCargaResultados"></div>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-lg-12 hide" id="divCuerpoFormularios">
+                        <div class="card card-custom example example-compact">
+                            <div class="card-header">
+                                <div class="izquierdaFloat">
+                                    <h6 style="margin-top:5px;color:#FFFFFF !important;">Cuerpo formulario</h6>
+                                </div>
+                                <div class="derechaFloat">
+                                    <a href="javascript:$('#divCuerpoFormularios').hide();$('#divRegistrosFormularios').show();" class="btn btn-icon btn-primary">
+                                        <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                    </a>
+                                    <a href="javascript:chatBot.showPasoToPasoCuerpoForm();" class="btn btn-icon btn-primary">
+                                        <i class="fas fa-info-circle text-while" style="font-size:17px;"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body" id="idBodyCuerpoFormularios">
+                                <div id="bodyPreloadsCuerpoFormulario">
+                                    <p align="center" style="font-size:13px;text-align:center;overflow: hidden;">
+                                        <b>Un momento por favor <br>
+                                            Estamos cargando el cuerpo de tu formulario
+                                        </b>
+                                        <br><br>
+                                        <i class="fa fa-spinner fa-spin"  style="font-size:35px;color:#5A078B;text-align:center;"></i>
+                                    </p>
+                                </div>
+                                <div>
+                                  <form id="formularisTipificadocampos">
+                                    <div class="row" id="divCuerpoFormulario">
+                                    </div>
+                                  </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-lg-12 hide" id="divCrecionFormulario" style="aling-">
+                        <div class="card card-custom example example-compact">
+                            <div class="card-header" id="idHeaderCrearFormulario">
+                                <div class="izquierdaFloat">
+                                    <h6 style="margin-top:5px;color:#FFFFFF !important;">Crear formulario</h6>
+                                </div>
+                                <div class="derechaFloat">
+                                    <a href="javascript:chatBot.regresarNewFormularioSeg();" class="btn btn-icon btn-primary">
+                                        <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                    </a>
+                                    <a href="javascript:chatBot.siguientePasoFormulario('idBodyCreateFormulario','idBodyCreateCamposFormulario','idHeaderCrearFormulario','idHeaderCrearCamposFormulario');" class="btn btn-icon btn-primary">
+                                        <i class="fas fa-arrow-right text-while" style="font-size:17px;"></i>
+                                    </a>
+                                    <a href="javascript:chatBot.showPasoToPasoFormulario();" class="btn btn-icon btn-primary">
+                                        <i class="fas fa-info-circle text-while" style="font-size:17px;"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-header hide" id="idHeaderCrearCamposFormulario">
+                                <div class="izquierdaFloat">
+                                    <h6 style="margin-top:5px;color:#FFFFFF !important;">Configurar campos</h6>
+                                </div>
+                                <div class="derechaFloat">
+                                    <a href="javascript:chatBot.siguientePasoFormulario('idBodyCreateCamposFormulario','idBodyCreateFormulario','idHeaderCrearCamposFormulario','idHeaderCrearFormulario');" class="btn btn-icon btn-primary">
+                                        <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                    </a>
+                                    <a href="javascript:chatBot.guardarFormPrevio('{{=data.idSegmento}}');" class="btn btn-icon btn-success">
+                                        <i class="fas fa-save text-while" style="font-size:17px;"></i>
+                                    </a>
+                                    <a href="javascript:chatBot.showPasoToPasoFormulario();" class="btn btn-icon btn-primary">
+                                        <i class="fas fa-info-circle text-while" style="font-size:17px;"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-header hide" id="idHeaderResumenFormulario">
+                                <div class="izquierdaFloat">
+                                    <h6 style="margin-top:5px;color:#FFFFFF !important;">Resumen formulario</h6>
+                                </div>
+                                <div class="derechaFloat">
+                                    <a href="javascript:chatBot.siguientePasoFormulario('idBodyResumenFormulario','idBodyCreateCamposFormulario','idHeaderResumenFormulario','idHeaderCrearCamposFormulario');" class="btn btn-icon btn-primary">
+                                        <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                    </a>
+                                    <a href="javascript:chatBot.showPasoToPasoFormulario();" class="btn btn-icon btn-primary">
+                                        <i class="fas fa-info-circle text-while" style="font-size:17px;"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body" id="idBodyCreateFormulario">
+                                <div class="row">
+                                    <div class="col col-lg-6">
+                                        <label class="col-form-label">Nombre formulario</label>
+                                        <input 
+                                            id="nombreFormulario"
+                                            type="text" 
+                                            class="form-control inputLower" 
+                                            placeholder="Nombre Formulario" 
+                                            autocomplete="false" 
+                                            onpaste="Swal.fire('Error','No puedes pegar','error');return false">
+                                    </div>
+                                    <div class="col col-lg-6">
+                                        <label class="col-form-label">Cantidad campos</label>
+                                        <input 
+                                            id="canCampos"
+                                            type="text" 
+                                            class="form-control inputLower" 
+                                            placeholder="Cantidad campos"  
+                                            autocomplete="false" 
+                                            onpaste="Swal.fire('Error','No puedes pegar','error');return false">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body hide" id="idBodyCreateCamposFormulario">
+                                <div class="row">
+                                    <div class="col col-lg-7">
+                                        <h6 align="center"><b>Vista previa</b></h6>
+                                        <hr>
+                                        <div id="vistaFinal">
+                                            <form id="formVistaFinal">
+                                                <div id="divVistaPreviaForm"></div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="col col-lg-5">
+                                        <h6 align="center"><b>Construcción</b></h6>
+                                        <hr>
+                                        <form id="formConstruccion"> 
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <div class="form-group">
+                                                        <label class="col-form-label">Titulo campo</label>
+                                                        <input 
+                                                            type="text" 
+                                                            class="form-control inputLower" 
+                                                            id="tituloCampo" 
+                                                            placeholder="Tutilo campo"
+                                                            autocomplete="false" 
+                                                            onpaste="Swal.fire('Error','No puedes pegar','error');return false">
+                                                        <span class="form-text text-muted">Ingrese un titulo para identificar el campo.</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="form-group">
+                                                        <label class="col-form-label">Tipo dato</label>
+                                                        <select 
+                                                            class="custom-select form-control"
+                                                            id="tipoDatoForm">
+                                                            <option value="" selected>Selecciona una opción</option>
+                                                            {{ for tip in tiposDatosHtml: }}
+                                                                <option value="{{=tip}}">{{=str(tip).capitalize()}}</option>
+                                                            {{pass}}
+                                                        </select>
+                                                       <span class="form-text text-muted">Selccione un tipo.</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="form-group">
+                                                        <label class="col-form-label">Obligatorio</label>
+                                                        <select 
+                                                            class="custom-select form-control"
+                                                            id="obligatorio">
+                                                            <option value="" selected>Selecciona una opción</option>
+                                                            <option value="1">Si</option>
+                                                            <option value="0">No</option>
+                                                        </select>
+                                                        <span class="form-text text-muted">Selccione un opción.</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-4"></div>
+                                                <div class="col-lg-4"></div>
+                                                <div class="col-lg-4">
+                                                  <a href="javascript:chatBot.siguienteCampo();" class="btn btn-block btn-primary">Siguiente</a>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body hide" id="idBodyResumenFormulario">
+                                <div>
+                                    <p align="centro">Resumen</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="puntosPago">
+            <p class="textOfertaViews" align="justify">Recuerde que los puntos de pagos acá configurado sera el que se le informara a el cliente.</p>
+            <hr>
+            <div class="member-details" style="margin-top:-10px;">
+                <ul id="ulNabTabOferta"></ul>
+            </div>
+            <div class="social-media-col">
+                <div id="divIdTableRegPuntoPago">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <div class="derechaFloat">
+                                <a href="javascript:ger.nuevoPuntoPago();" class="btn btn-icon btn-success">
+                                    <i class="fas fa-plus text-while" style="font-size:17px;"></i>
+                                </a>
+                            </div>
+                            <thead class="borderCard">
+                                <tr>
+                                    <th class="">Nombre</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="idTbodyListGestiones">
+                                {{for infoPp in listadoPunto:}}
+                                    <tr>
+                                        <td class="">{{=str(infoPp.punto_pago).capitalize()}}</td>
+                                        <td class="text-center">
+                                            <a href="javascript:ger.editarInfoPuntoPago('{{=infoPp.id}}','{{=str(infoPp.punto_pago).capitalize()}}');">
+                                                <i class="fas fa-edit text-primary" style="font-size:17px;"></i>
+                                            </a>
+                                            &nbsp;&nbsp;
+                                            <a href="javascript:template.updateEstado('punto_pago','{{=infoPp.id}}',1);">
+                                                <i class="fas fa-trash-alt text-danger" style="font-size:17px;"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {{pass}}
+                            </tbody>
+                        </table> 
+                    </div>
+                </div>
+                <div id="divIdRegitroPuntoPSeg" class="hide">
+                    <div class="card card-custom example example-compact">
+                        <div class="card-header">
+                            <div class="izquierdaFloat">
+                                <h6 style="margin-top:5px;color:#FFFFFF !important;">Nuevo punto de pago</h6>
+                            </div>
+                            <div class="derechaFloat">
+                                <a href="javascript:$('#divIdRegitroPuntoPSeg').hide();$('#divIdTableRegPuntoPago').show();" class="btn btn-icon btn-primary">
+                                    <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col col-lg-12">
+                                    <label class="col-form-label">Punto de pago</label>
+                                    <input type="text" name="nomPuntoPago" id="nomPuntoPago" class="form-control" placeholder="Punto de pago">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="derechaFloat">
+                                <a href="javascript:ger.guardarPuntoPago();" class="btn btn-icon btn-success">
+                                    Guardar punto pago
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="divEitarPuntoPSeg" class="hide">
+                    <div class="card card-custom example example-compact">
+                        <div class="card-header">
+                            <div class="izquierdaFloat">
+                                <h6 style="margin-top:5px;color:#FFFFFF !important;">Editar punto de pago</h6>
+                            </div>
+                            <div class="derechaFloat">
+                                <a href="javascript:$('#divEitarPuntoPSeg').hide();$('#divIdTableRegPuntoPago').show();" class="btn btn-icon btn-primary">
+                                    <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col col-lg-4">
+                                    <label class="col-form-label">Nombre horario</label>
+                                    <input type="text" name="nomPuntoPagoEditar" id="nomPuntoPagoEditar" class="form-control" placeholder="Punto de pago">
+                                </div>
+                                <input type="hidden" id="idPuntoPagoEdit">
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="derechaFloat">
+                                <a href="javascript:ger.actualizarPuntoPago();" class="btn btn-icon btn-success">
+                                    Actualizar punto pago
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="contextosBot">
+            <div class="about-media-tabs">
+                <nav>
+                    <div class="nav nav-tabs justify-content-end" id="nav-tab">
+                        <a class="nav-item nav-link active" id="nav-contextosBotInter-tab" data-bs-toggle="tab" href="#contextosBotInter" _onclick="ger.clickFocusTabInter('contextosBotInter','nav-contextosBotInter-tab')">Contextos</a>
+                        <a class="nav-item nav-link" id="nav-templateInter-tab" data-bs-toggle="tab" href="#templateInter" _onclick="ger.clickFocusTabInter('templateInter','nav-templateInter-tab')">Templates</a>
+                        <a class="nav-item nav-link" id="nav-instanciasInter-tab" data-bs-toggle="tab" href="#instanciasInter" _onclick="ger.clickFocusTabInter('instanciasInter','nav-instanciasInter-tab')">Instancias</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContentInter">
+                    <div class="tab-pane fade active show" id="contextosBotInter">
+                        <p class="textOfertaViews" align="justify">Recuerde que los contextos acá configurados son los que vera el cliente a la hora de una conversación.</p>
+                        <hr>
+                        <div class="member-details" style="margin-top:-10px;">
+                            <ul id="ulNabTabOferta"></ul>
+                        </div>
+                        <div class="social-media-col">
+                            <div class="row">
+                                <div class="col col-lg-12" id="divRegistrosContextos">
+                                    <div class="card card-custom example example-compact">
+                                        <div class="card-header">
+                                            <div class="izquierdaFloat">
+                                                <h6 style="margin-top:5px;color:#FFFFFF !important;">Contextos</h6>
+                                            </div>
+                                            <div class="derechaFloat">
+                                                <a href="javascript:chatBot.newContBot('{{=data.idSegmento}}');" class="btn btn-icon btn-success">
+                                                    <i class="fas fa-plus text-while" style="font-size:17px;"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!-- Relador -->
+                                        <div class="card-body">
+                                            {{ if len(listadoContChatBot) > 0 :}}
+                                                <table class="table table-striped">
+                                                    <thead class="borderCard">
+                                                        <tr>
+                                                            <th class="">Contexto</th>
+                                                            <th class="text-center">Estado uso</th>
+                                                            <th class="text-center">Nodos</th>
+                                                            <th class="text-center">Acciones</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="idTbodyListSmsPrest">
+                                                        {{for infoChatCont in listadoContChatBot:}}
+                                                            <tr>
+                                                                <td class="">{{=str(infoChatCont.contexto_nombre_contexto).capitalize()}}</td>
+                                                                <td class="text-center">
+                                                                    {{ if infoChatCont.contexto_estado == 'False' : }}
+                                                                        <a href="javascript:chatBot.changeStatus('{{=infoChatCont.id}}','{{=str(infoChatCont.contexto_nombre_contexto).capitalize()}}','{{=data.idSegmento}}','0');">
+                                                                            <i class="fas fa-thumbs-down text-danger" style="font-size:17px;"></i>
+                                                                        </a>
+                                                                    {{else:}}
+                                                                        <a href="javascript:chatBot.changeStatus('{{=infoChatCont.id}}','{{=str(infoChatCont.contexto_nombre_contexto).capitalize()}}','{{=data.idSegmento}}','1');">
+                                                                            <i class="fas fa-thumbs-up text-success" style="font-size:17px;"></i>
+                                                                        </a>
+                                                                    {{pass}}
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <button type="button" class="btn btn-primary" onclick="chatBot.verNodosContexto('{{=infoChatCont.id}}','{{=str(infoChatCont.contexto_nombre_contexto).capitalize()}}','{{=data.idSegmento}}','{{=infoChatCont.contexto_nombre_json}}');">
+                                                                        <span class="badge badge-success">{{=infoChatCont.contexto_cantidad_nodos}}</span> Nodos
+                                                                        <span class="sr-only">unread messages</span>
+                                                                    </button>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <!-- <a href="javascript:ger.editarinfoChatCont('{{=infoChatCont.id}}','{{=str(infoChatCont.contexto_nombre_contexto).capitalize()}}');">
+                                                                        
+                                                                    </a> -->
+                                                                    <i class="fas fa-comments text-primary" style="font-size:17px;cursor:pointer;" onclick="chatBot.probarChatCont('{{=infoChatCont.id}}','{{=str(infoChatCont.contexto_nombre_contexto).capitalize()}}','{{=infoChatCont.contexto_nombre_json}}',0);"></i>
+                                                                    &nbsp;&nbsp;
+                                                                    <i class="fab fa-whatsapp text-success" style="font-size:17px;cursor:pointer;" onclick="chatBot.probarChatWhas('{{=infoChatCont.id}}','{{=str(infoChatCont.contexto_nombre_contexto).capitalize()}}','{{=infoChatCont.contexto_nombre_json}}');"></i>
+                                                                    <!-- <a href="javascript:template.updateEstado('contextoXChabot','{{=infoChatCont.id}}',1);">
+                                                                        
+                                                                    </a> -->
+                                                                </td>
+                                                            </tr>
+                                                        {{pass}}
+                                                    </tbody>
+                                                </table>
+                                            {{else:}}
+                                                <p>Es estos momentos no tienes contextos creados para tu Bot.</p>
+                                            {{pass}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="newNodos" class="hide">
+                                    <div id="bodyPreloadsCreateContextoChatBot">
+                                        <p align="center" style="font-size:13px;text-align:center;overflow: hidden;">
+                                            <b>Un momento por favor <br>
+                                                Estamos cargando infomación sobre creación de contexto chatBot
+                                            </b>
+                                            <br><br>
+                                            <i class="fa fa-spinner fa-spin"  style="font-size:35px;color:#5A078B;text-align:center;"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-12 hide" id="divBodyNodosContextos">
+                                    <div class="card card-custom example example-compact">
+                                        <div class="card-header">
+                                            <div class="izquierdaFloat">
+                                                <h6 style="margin-top:5px;color:#FFFFFF !important;" id="nombreContexChatBot"></h6>
+                                            </div>
+                                            <div class="derechaFloat">
+                                                <a href="javascript:$('#divBodyNodosContextos').hide();$('#divRegistrosContextos').show();" class="btn btn-icon btn-primary">
+                                                    <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                                </a>
+                                                <a href="javascript:chatBot.siguienteNodos('idBodyPasoOne','idBodyPasoTwo','idHeaderPasoOne','idHeaderPasosSiguientes','pasoOne');" class="btn btn-icon btn-primary">
+                                                    <i class="fas fa-arrow-right text-while" style="font-size:17px;"></i>
+                                                </a>
+                                                <a  href="" class="btn btn-icon btn-primary" target="_black" title="Ver contexto" id="aHrefLessJson">
+                                                    <i class="fab fa-less text-while" style="font-size:20px;"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="bodyPreloadsCuerpoContextoChatBot">
+                                                <p align="center" style="font-size:13px;text-align:center;overflow: hidden;">
+                                                    <b>Un momento por favor <br>
+                                                        Estamos cargando los nodos del contexto
+                                                    </b>
+                                                    <br><br>
+                                                    <i class="fa fa-spinner fa-spin"  style="font-size:35px;color:#5A078B;text-align:center;"></i>
+                                                </p>
+                                            </div>
+                                            <div id="bodyNodos" class="row"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-12 hide" id="bodyPruebaContexto">
+                                    <div class="card card-custom example example-compact">
+                                        <div class="card-header">
+                                            <div class="izquierdaFloat">
+                                                <h6 style="margin-top:5px;color:#FFFFFF !important;" >Prueba contexto en paso a paso</h6>
+                                            </div>
+                                            <div class="derechaFloat">
+                                                <a href="javascript:$('#bodyPruebaContexto').hide();$('#divRegistrosContextos').show();" class="btn btn-icon btn-primary">
+                                                    <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                                </a>
+                                                <a  href="javascript:chatBot.reiniciarChat();" class="btn btn-icon btn-primary" title="Reiniciar chat">
+                                                    <i class="fas fa-trash-alt text-while" style="font-size:20px;"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="chat" id="middle">
+                                                <div class="slimscroll">
+                                                    <div class="chat-body bodySmsConversa" id="bodySmsConversa">
+                                                        <div class="messages" style="height:250px; overflow-y: auto;" id="divMsms"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="chat-footer">
+                                                    <form onsubmit="return false;" id="formularioEncvioSms">
+                                                        <input type="number" id="mensajeEscribiendoGerente" class="form-control chat_form"
+                                                            placeholder="Escriba su respuesta.....">
+                                                        <div class="form-buttons">
+                                                            <button class="btn send-btn" type="submit">
+                                                                <span class="material-icons">send</span>
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-12 hide" id="bodyPruebaWhast">
+                                    <div class="card card-custom example example-compact">
+                                        <div class="card-header">
+                                            <div class="izquierdaFloat">
+                                                <h6 style="margin-top:5px;color:#FFFFFF !important;">Prueba contexto en whatsapp</h6>
+                                            </div>
+                                            <div class="derechaFloat">
+                                                <a href="javascript:$('#bodyPruebaWhast').hide();$('#divRegistrosContextos').show();" class="btn btn-icon btn-primary hide" id="btnRegresarPruebWhas">
+                                                    <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                                </a>
+                                                <a href="javascript:chatBot.configNodosInicioDes();" class="btn btn-icon btn-primary hide disabled" id="btnSigFormulari">
+                                                    <i class="fas fa-arrow-right text-while" style="font-size:17px;"></i>
+                                                </a>
+                                                <a  href="javascript:chatBot.iniciarChat();" class="btn btn-icon btn-primary hide" title="Nueva interaccion" id="newInteraccionCreate">
+                                                    <i class="far fa-plus text-while" style="font-size:20px;"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="bodyPreloadsCreateConfiCamposChatbot">
+                                                <p align="center" style="font-size:13px;text-align:center;overflow: hidden;">
+                                                    <b>Un momento por favor <br>
+                                                        Estamos cargando infomación sobre creación de contexto chatBot
+                                                    </b>
+                                                    <br><br>
+                                                    <i class="fa fa-spinner fa-spin"  style="font-size:35px;color:#5A078B;text-align:center;"></i>
+                                                </p>
+                                            </div>
+                                            <div class="hide" id="listConfiguradoCampos"></div>
+                                            <div class="hide" id="listConfigCampos">
+                                                <p class="textOfertaViews" align="justify">Selecciones los campos que requiere el contexto.</p>
+                                                <hr>
+                                                <div class="member-details" style="margin-top:-5px;">
+                                                    <ul class="user-list mt-2" style="height:400px; overflow-y: auto;">
+                                                        <div class="row">
+                                                            {{for camps in  listadoCamposOferta: }}
+                                                                {{nameCampo=str(camps).replace('"','').replace(',','')}}
+                                                                <div class="col-3">
+                                                                    <li class="cardTipi" onclick="chatBot.agregarCampWhasPru('{{=nameCampo}}');" id="nomNodoLiWhas_{{=nameCampo}}">
+                                                                        <div class="users-list-body">
+                                                                            <div>
+                                                                                <h6 class="textOfertaViews">{{=str(camps).replace('"','').replace(',','').capitalize()}}</h6>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                </div>
+                                                            {{pass}}
+                                                        </div>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="templateInter">
+                        <p class="text-center">Proximamente</p>
+                    </div>
+                    <div class="tab-pane fade" id="instanciasInter">
+                        <p class="textOfertaViews" align="justify">Recuerde que las instancias aquí listadas pertenecen a las que estan en Meta.</p>
+                        <hr>
+                        <div class="row">
+                            <div class="col col-lg-12" id="divRegistrosInstancias">
+                                <div class="card card-custom example example-compact">
+                                    <div class="card-header">
+                                        <div class="izquierdaFloat">
+                                            <h6 style="margin-top:5px;color:#FFFFFF !important;">Listado de instancias</h6>
+                                        </div>
+                                        <div class="derechaFloat">
+                                            <a href="javascript:chatBot.newContBot('{{=data.idSegmento}}');" class="btn btn-icon btn-success">
+                                                <i class="fas fa-plus text-while" style="font-size:17px;"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        {{ if len(listadoInstancias) > 0 :}}
+                                            <table class="table table-striped">
+                                                <thead class="borderCard">
+                                                    <tr>
+                                                        <th class="">Instancia</th>
+                                                        <th>Número instancia</th>
+                                                        <th class="text-center">Estado uso</th>
+                                                        <th class="text-center">Intensidad día</th>
+                                                        <th class="text-center">Estado envío</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="idTbodyListSmsPrest">
+                                                    {{for infoInstanc in listadoInstancias:}}
+                                                        {{=userType[0]}}
+                                                        <tr>
+                                                            <td class="">{{=infoInstanc['instance']}}</td>
+                                                            <td>{{=infoInstanc['num_instance']}}</td>
+                                                            <td class="text-center">
+                                                                {{if ( ( userType[0] ==  'Developer' ) | ( userType[0] ==  'Administrador' )):}}
+                                                                    {{if int(infoInstanc['estado']) == 0 : }}
+                                                                        <a href="javascript:chatBot.changeStatus('{{=infoInstanc['idInstance']}}','{{=infoInstanc['instance']}}','{{=data.idSegmento}}','0');" class="text-center">
+                                                                            <i class="text-center fas fa-thumbs-down text-danger" style="font-size:17px;"></i>
+                                                                        </a>
+                                                                    {{else:}}
+                                                                        <a href="javascript:chatBot.changeStatus('{{=infoInstanc['idInstance']}}','{{=infoInstanc['instance']}}','{{=data.idSegmento}}','1');" class="text-center">
+                                                                            <i class="text-center fas fa-thumbs-up text-success" style="font-size:17px;"></i>
+                                                                        </a>
+                                                                    {{pass}}
+                                                                {{else:}}
+                                                                    {{if int(infoInstanc['estado']) == 0 : }}
+                                                                        <a class="text-center">
+                                                                            <i class="text-center fas fa-thumbs-down text-danger" style="font-size:17px;"></i>
+                                                                        </a>
+                                                                    {{else:}}
+                                                                        <a class="text-center">
+                                                                            <i class="text-center fas fa-thumbs-up text-success" style="font-size:17px;"></i>
+                                                                        </a>
+                                                                    {{pass}}
+                                                                {{pass}}
+                                                            </td>
+                                                            <td class="text-center">{{=infoInstanc['intensidad'] or 0}}</td>
+                                                            <td class="text-center">
+                                                                {{if infoInstanc['status_send'] == 'hotFull': }}
+                                                                    <span class="badge bg-danger">{{=str(infoInstanc['status_send']).capitalize()}}</span>
+                                                                {{elif infoInstanc['status_send'] == 'success':}}
+                                                                    <span class="badge bg-success">{{=str(infoInstanc['status_send']).capitalize()}}</span>
+                                                                {{else:}}
+                                                                    <span class="badge bg-warning">{{=str(infoInstanc['status_send']).capitalize()}}</span>
+                                                                {{pass}}
+                                                                
+                                                            </td>
+                                                            <td class="">
+                                                                {{if ( ( userType[0] ==  'Developer' ) | ( userType[0] ==  'Administrador' )):}}
+                                                                    <i class="fa fa-edit text-primary cursor" onclick="chatBot.editarIntance({{=infoInstanc['idInstance']}},'{{=infoInstanc['instance']}}');"></i>&nbsp;&nbsp;
+                                                                {{pass}}
+                                                                <i class="fa fa-eye text-warning cursor" onclick="chatBot.detalleIntance({{=infoInstanc['idInstance']}},'{{=infoInstanc['instance']}}');"></i>
+                                                            </td>
+                                                        </tr>
+                                                    {{pass}}
+                                                </tbody>
+                                            </table>
+                                        {{else:}}
+                                            <p>Es estos momentos no hay instancias creadas.</p>
+                                        {{pass}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-12 hide" id="divEditarInstancias">
+                                <div class="card card-custom example example-compact">
+                                    <div class="card-header">
+                                        <div class="izquierdaFloat">
+                                            <h6 style="margin-top:5px;color:#FFFFFF !important;" id="titleIntancesEdit"></h6>
+                                        </div>
+                                        <div class="derechaFloat">
+                                            <a href="javascript:chatBot.regresarList('divEditarInstancias','divRegistrosInstancias');" class="btn btn-icon btn-primary">
+                                                <i class="fas fa-arrow-left text-while" style="font-size:17px;"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="bodyPreloadsEditarInstancias">
+                                            <p align="center" style="font-size:13px;text-align:center;overflow: hidden;">
+                                                <b>Un momento por favor <br>
+                                                    Estamos cargando infomación
+                                                </b>
+                                                <br><br>
+                                                <i class="fa fa-spinner fa-spin"  style="font-size:35px;color:#5A078B;text-align:center;"></i>
+                                            </p>
+                                        </div>
+                                        <div id="bodyInfoEditarInstancias"></div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="derechaFloat">
+                                            <a href="javascript:ger.guardarHorario();" class="btn btn-icon btn-success">
+                                                Guardar cambios
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-12 hide" id="divDetalleInstancias">
+                                <div class="card card-custom example example-compact">
+                                    <div class="card-header">
+                                        <div class="izquierdaFloat">
+                                            <h6 style="margin-top:5px;color:#FFFFFF !important;" id="titleIntancesDetalle"></h6>
+                                        </div>
+                                        <div class="derechaFloat">
+                                            <a href="javascript:chatBot.newContBot('{{=data.idSegmento}}');" class="btn btn-icon btn-success">
+                                                <i class="fas fa-plus text-while" style="font-size:17px;"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <span class="dashicons dashicons-editor-alignleft"></span> instances
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{block page_js}}
+    <script src="{{=URL('static','js/gerente/chatbot.js')}}"></script>
+    <script>
+        onpaste="alert('no se puede')"
+    </script>
+{{end page_js}}

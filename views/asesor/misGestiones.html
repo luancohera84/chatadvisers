@@ -1,0 +1,106 @@
+{{extend rederHtmlPrincipal()}}
+<!-- <link rel="stylesheet" href="{{#=URL('static','css/reporte.css')}}"> -->
+<div class="col-lg-12" id="divResumenGestiones">
+    <div class="slimscroll m-2" id="idDivGestiones">
+        <div class="card abajoMin">
+            <div class="card-header">
+                <div style="float: left;">
+                    <span id="tituloMostrar"><b>Mostrando gestiones {{=mesCurso(str(request.now).split('-')[1])}}</b></span>
+                </div>
+                <div style="float: right">
+                    {{mesAntes = ( int(str(request.now).split('-')[1]) - 1 ) }}
+                    <a href="javascript:ases.cambioPantalla('mesAntes','{{=mesCurso( mesAntes )}}');" class="btn btn-outline-primary btn-sm"> <span class="text-white">Gestiones {{=mesCurso( mesAntes )}}</span></a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:ases.cambioPantalla('mesActual','{{=mesCurso(str(request.now).split('-')[1])}}');" class="btn btn-outline-primary btn-sm"> <span class="text-white">Gestiones {{=mesCurso(str(request.now).split('-')[1])}}</span></a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col col-12 hide" id="idSpinerChatListAsesores">
+                        <div class="card-body text-center">
+                            <span  class="text-center">
+                                <i class="fa fa-spinner fa-spin"  style="font-size:25px;color:#5A078B;text-align:center;"></i> <br>
+                                <h6 id="textoSpinner">Listando gestiones {{=mesCurso( mesAntes )}}</h6>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col col-12" id="idDivBodyAsignacion">
+                        <div class="table-responsive">
+                            <table class="table" style="width:100%" id="tableAsesoresAsig">
+                                <thead class="borderCard">
+                                    <tr>
+                                        <th>Empresa</th>
+                                        <th class="text-center">Cliente</th>
+                                        <th class="text-center">Segmento</th>
+                                        <th class="text-center">Cliente - Usuario</th>
+                                        <th class="text-center">Identificación</th>
+                                        <th class="text-center">Télefono</th>
+                                        <th class="text-center">Resultado</th>
+                                        <th class="text-center">Fecha gestión</th>
+                                        <th class="text-center">Más info.</th>
+                                        <th class="text-center">Chat</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="idTbodyListGestiones">
+                                    {{for info in infoGestiones:}}
+                                        <tr id="idTrGestionInfo_{{=info['id']}}">
+                                            <td>{{=str(info['empresa']).capitalize()}}</td>
+                                            <td class="text-center">{{=str(info['cliente']).capitalize()}}</td>
+                                            <td class="text-center">{{=str(info['segmento']).capitalize()}}</td>
+                                            <td class="text-center">{{=str(info['nombre_cliente']).capitalize()}}</td>
+                                            <td class="text-center">{{=info['identificacion_cliente']}}</td>
+                                            <td class="text-center">{{=info['telefono_cliente']}}</td>
+                                            <td class="text-center">{{=str(info['descripcion_resultado']).capitalize()}}</td>
+                                            <td class="text-center">{{=info['fecha_interaccion']}} {{=info['hora_interaccion']}}</td>
+                                            <td class="text-center">
+                                                <a href="javascript:ases.masInfoGestion('{{=info['id']}}','{{=str(info['nombre_cliente']).capitalize()}}','{{=info['comentarios']}}','{{=info['formulario']}}','{{=info['formulario_id']}}');">
+                                                    <i class="fas fa-info-circle text-primary" style="font-size:17px;"></i>
+                                                </a>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="javascript:ases.verChats('{{=info['id_info_cliente']}}','{{=str(info['nombre_cliente']).capitalize()}}','{{=info['id_empresa']}}','{{=info['telefono_cliente']}}');">
+                                                    <i class="fab fa-whatsapp text-success" style="font-size:17px;"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {{pass}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col col-12 hide" id="idDivBodyMesAntes"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-4 hide m-2" id="divMasInfoGestion">
+    <div class="card abajoMin">
+        <div class="card-header">
+            <div style="float: left;">
+                <span class="text-white" id="infoClienteMasInfo"><b>Más información</b></span>
+            </div>
+            <div style="float: right">
+                <a href="javascript:ases.cerrarMasInfo();" class="btn btn-outline-primary btn-sm"><span class="text-white">Cerrar</span></a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col col-12">
+                    <div class="col col-12" id="idSpinerChatMasInfoGestion">
+                        <div class="card-body text-center">
+                            <span  class="text-center">
+                                <i class="fa fa-spinner fa-spin"  style="font-size:25px;color:#5A078B;text-align:center;"></i> <br>
+                                <h6 id="textoSpinner">Cargando más infomarción</h6>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row" id="contenidoChatMasInfoGestion"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{block page_js}}
+    <script src="{{=URL('static','js/asesor/dashboard.js')}}"></script>
+{{end page_js}}

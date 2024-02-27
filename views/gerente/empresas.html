@@ -1,0 +1,81 @@
+{{extend rederHtmlPrincipal()}}
+<div class="sidebar-group left-sidebar chat_sidebar">
+
+    <div id="chats" class="left-sidebar-wrap sidebar active slimscroll">
+        <div class="slimscroll">
+            <div class="left-chat-title d-flex justify-content-between align-items-center">
+                <div class="chat-title">
+                    <h4>{{=str(response.suBtitle).capitalize()}}</h4>
+                </div>
+            </div>
+            <div class="search_chat has-search"></div>
+            <div class="sidebar-body" id="chatsidebar">
+                <div class="left-chat-title d-flex justify-content-between align-items-center ps-0 pe-0">
+                    <div class="chat-title">
+                        <h4>{{=str(response.title).capitalize()}}</h4>
+                    </div>
+                </div>
+                <ul class="user-list mt-2" id="listaEmpresas">
+                    {{ if len(infoCompany) > 0: }}
+                        {{ for emp in  infoCompany:}}
+                            <li class="user-list-item" id="empresaLi_{{=emp.empresas.id}}">
+                                <div>
+                                    {{if emp.empresas.estado_empresa == 'True' :}}
+                                        <div class="avatar avatar-online">
+                                            <div class="letter-avatar"  onclick="ger.verInfoEmpresa( '{{=emp.empresas.id}}','{{=str(emp.empresas.nombre_empresa).capitalize()}}' )">
+                                                {{=str(emp.empresas.nombre_empresa).capitalize()[:1]}}
+                                            </div>
+                                        </div>
+                                    {{else:}}
+                                        <div class="avatar avatar-offline">
+                                            <div class="letter-avatar" onclick="ger.verInfoEmpresa( '{{=emp.empresas.id}}','{{=str(emp.empresas.nombre_empresa).capitalize()}}' )">
+                                                {{=str(emp.empresas.nombre_empresa).capitalize()[:1]}}
+                                            </div>
+                                        </div>
+                                    {{pass}}
+                                </div>
+                                <div class="users-list-body">
+                                    <div>
+                                        <h5>{{=str(emp.empresas.nombre_empresa).capitalize()}}</h5>
+                                        <p><span class="material-icons">check_circle</span>  {{=fechaFormato(emp.asesores_empresas.hora_creacion,'fecha')}} | {{=fechaFormato(emp.asesores_empresas.fecha_creacion,'hora')}}</p>
+                                    </div>
+                                    <div class="chat-action-btns me-2"></div>
+                                </div>
+                            </li>
+                        {{pass}}
+                    {{else:}}
+                        <li class="user-list-item">
+                            <div>
+                                <div class="avatar avatar-offline">
+                                    <div class="letter-avatar">
+                                        N
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="users-list-body">
+                                <div>
+                                    <h5>No hay empresas asignadas</h5>
+                                    <p><span class="material-icons">check_circle</span>  {{=str(request.now)[:16]}}</p>
+                                </div>
+                            </div>
+                        </li>   
+                    {{pass}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="chat" id="middle-empresas">
+    <div class="slimscroll">
+        <div class="chat-header card-header">
+            <h6 class="text-center titulo">
+                Información  empresa seleccionada
+            </h6>
+        </div>
+        <div class="chat-body">
+            <div class="messages">
+                <div class="chats"></div>
+            </div>
+        </div>
+    </div>
+</div>

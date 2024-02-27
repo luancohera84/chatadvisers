@@ -1,0 +1,50 @@
+{{extend rederHtmlPrincipal()}}
+<div id="dashboardAsesor">
+    <div class="sidebar-group left-sidebar chat_sidebar">
+
+        <div class="sidebar-group left-sidebar chat_sidebar">
+
+            <div id="chats" class="left-sidebar-wrap sidebar active slimscroll">
+                <div class="slimscroll">
+                    <div class="left-chat-title d-flex justify-content-between align-items-center">
+                        <div class="chat-title">
+                            <h4>{{=str(response.suBtitle).capitalize()}}</h4>
+                        </div>
+                    </div>
+                    <div class="search_chat has-search"></div>
+                    <div class="sidebar-body" id="chatsidebar">
+                        <div class="left-chat-title d-flex justify-content-between align-items-center ps-0 pe-0">
+                            <div class="chat-title">
+                                <h4>{{=str(response.title).capitalize()}}</h4>
+                            </div>
+                            <div class="add-section"> </div>
+                        </div>
+                        <ul class="user-list mt-2">
+                            <li class="user-list-item">
+                                <div>
+                                    <div class="avatar avatar-offline">
+                                        <div class="letter-avatar">
+                                            N
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="users-list-body">
+                                    <div>
+                                        <h6>No hay chats seleccionado/atender</h6>
+                                        <p><span class="material-icons">check_circle</span>  {{=str(request.now)[:16]}}</p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="listaChatEmpresa_{{=idUser}}"></div>
+<div class="chat" id="middle"></div>
+<div id="ofertasChat_{{=idUser}}"></div>
+{{block page_js}}
+    <script src="{{=URL('static','js/asesor/dashboard.js')}}"></script>
+{{end page_js}}

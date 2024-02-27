@@ -1,0 +1,61 @@
+<div class="about-media-tabs">
+    <nav>
+        <div class="nav nav-tabs justify-content-end" id="nav-tab">
+            <a class="nav-item nav-link active" id="nav-campos-tab" data-bs-toggle="tab" href="#campos">Conf. campos</a>
+            <a class="nav-item nav-link" id="nav-contextos-tab" data-bs-toggle="tab" href="#contextos">Contextos</a>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="campos">
+            <p class="textOfertaViews" align="justify">Recuerde que los campos configurados aqui son los que vera el asesor a la hora de gestionar a un cliente.</p>
+            <hr>
+            <div class="member-details" style="margin-top:-10px;">
+                <ul class="user-list mt-2">
+                    <div class="row">
+                        {{for camps in  listadoCamposOferta: }}
+                            {{ if not str(camps).replace('"','').replace(',','') in textNoPicture :}}
+                                {{nomCampoRes = str(camps).replace('"','').replace(',','').replace('empresa_strauss','Nombre empresa').replace('cliente_strauss','Nombre cliente').replace('segmento_strauss','Nombre segmento').capitalize()}}
+                                {{nomCampoReal = str(camps).replace('"','').replace(',','')}}
+                                {{ campoMostrar = setValidateCampoAsignado( data.idSegmento, nomCampoReal ) }}
+                                {{ if campoMostrar != 0 :}}
+                                    <div class="col-3" data-bs-toggle="tooltip"  data-bs-placement="top" title="Texto original: {{=str(nomCampoReal).capitalize()}}">
+                                        <li class="cardTipi" style="background-color:#e8f9f8;" onclick="emp.asignarCampoSegmento('{{=data.idSegmento}}','{{=campoMostrar}}','{{=nomCampoReal}}',1);">
+                                            <div class="users-list-body">
+                                                <div>
+                                                    <h6 class="textOfertaViews">{{=str(campoMostrar).replace('_',' ').capitalize()}}</h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </div>
+                                {{else:}}
+                                    <div class="col-3">
+                                        <li class="cardTipi" onclick="emp.asignarCampoSegmento('{{=data.idSegmento}}','{{=nomCampoRes}}','{{=nomCampoReal}}',0);">
+                                            <div class="users-list-body">
+                                                <div>
+                                                    <h6 class="textOfertaViews">{{=str(camps).replace('"','').replace(',','').capitalize()}}</h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </div>
+                                {{pass}}
+                            {{pass}}
+                        {{pass}}
+                    </div>
+                </ul>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="contextos">
+            <p class="textOfertaViews" align="justify">Recuerde que los textos aca configurados son los que vera el asesor a la hora de gestionar a un cliente.</p>
+            <hr>
+            <div class="member-details" style="margin-top:-10px;">
+                <ul id="ulNabTabOferta"></ul>
+            </div>
+            <div class="social-media-col">
+                <h6>Links otros canales</h6>
+                <ul>
+                    <li id="linkIdTuacuerdo"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

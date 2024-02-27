@@ -1,0 +1,123 @@
+{{ if len(infoCustomers) > 0: }}
+  <div class="accordion" id="accordionExample">
+    {{ for cli in  infoCustomers:}}
+      {{ infoClAsi = setValidateClienteUsuarios( cli.id, varDatos.idUser ) }}
+      {{ if infoClAsi: }}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne_{{=cli.id}}" aria-expanded="false" aria-controls="collapseOne_{{=cli.id}}">
+            <h6 class="titulo" id="titleIdCliente_{{=cli.id}}">
+              <small>{{=str(cli.nombre_cliente).capitalize()}} <br> {{=fechaFormato(infoClAsi.fecha_creacion,'fecha')}} {{=fechaFormato(infoClAsi.hora_creacion,'hora')}}</small>
+            </h6>
+            </button>
+          </h2>
+          <div id="collapseOne_{{=cli.id}}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            {{ liSeg = setListadoSegmentosClientesUsu( cli.id ) }}
+            {{ if len(liSeg) > 0 :}}
+              <div class="accordion-body">
+                <div class="row">
+                  {{ for seg in liSeg :}}
+                    {{ infoSegAsi = setValidateSegmentoUsuarios( seg.id, varDatos.idUser ) }}
+                    {{ if infoSegAsi: }}
+                      <div class="col-6">
+                        <div class="card" id="cardSegment_{{=cli.id}}_{{=seg.id}}" style="background-color:#E8F9F8;cursor: pointer;" onclick="usus.asigSegmentoCliente('{{=varDatos.idEmpresa}}','{{=cli.id}}','{{=seg.id}}','{{=varDatos.idUser}}',1);">
+                          <div class="card-body  text-center">
+                            <small class="titulo">{{=str(seg.nombre_segmento).capitalize()}}</small>
+                          </div>
+                        </div>
+                      </div>
+                    {{else:}}
+                      <div class="col-6">
+                        <div class="card" id="cardSegment_{{=cli.id}}_{{=seg.id}}" style="cursor: pointer;" onclick="usus.asigSegmentoCliente('{{=varDatos.idEmpresa}}','{{=cli.id}}','{{=seg.id}}','{{=varDatos.idUser}}',0);">
+                          <div class="card-body text-center">
+                            {{=str(seg.nombre_segmento).capitalize()}}
+                          </div>
+                        </div>
+                      </div>
+                    {{pass}}
+                  {{pass}}
+                </div>
+              </div>
+            {{else:}}
+              <li class="user-list-item">
+                <div>
+                  <div class="avatar avatar-offline">
+                    <div class="letter-avatar">
+                      N
+                    </div>
+                  </div>
+                </div>
+                <div class="users-list-body">
+                  <div>
+                    <h5>No hay segmentos creados/activos</h5>
+                    <p><span class="material-icons">check_circle</span>  {{=str(request.now)[:16]}}</p>
+                  </div>
+                </div>
+              </li>   
+            {{pass}}
+          </div>
+        </div>
+      {{else:}}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne_{{=cli.id}}" aria-expanded="false" aria-controls="collapseOne_{{=cli.id}}">
+            <h6 id="titleIdCliente_{{=cli.id}}">
+              <small>{{=str(cli.nombre_cliente).capitalize()}}</small>
+            </h6>
+            </button>
+          </h2>
+          <div id="collapseOne_{{=cli.id}}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            {{ liSeg = setListadoSegmentosClientesUsu( cli.id ) }}
+            {{ if len(liSeg) > 0 :}}
+              <div class="accordion-body">
+                <div class="row">
+                  {{ for seg in liSeg :}}
+                    <div class="col-6">
+                      <div class="card" style="cursor: pointer;" onclick="usus.asigSegmentoCliente('{{=varDatos.idEmpresa}}','{{=cli.id}}','{{=seg.id}}','{{=varDatos.idUser}}',0);">
+                        <div class="card-body text-center">
+                          {{=str(seg.nombre_segmento).capitalize()}}
+                        </div>
+                      </div>
+                    </div>
+                  {{pass}}
+                </div>
+              </div>
+            {{else:}}
+              <li class="user-list-item">
+                <div>
+                  <div class="avatar avatar-offline">
+                    <div class="letter-avatar">
+                      N
+                    </div>
+                  </div>
+                </div>
+                <div class="users-list-body">
+                  <div>
+                    <h5>No hay segmentos creados/activos</h5>
+                    <p><span class="material-icons">check_circle</span>  {{=str(request.now)[:16]}}</p>
+                  </div>
+                </div>
+              </li>   
+            {{pass}}
+          </div>
+        </div>
+      {{pass}}
+    {{pass}}
+  </div>
+{{else:}}
+  <li class="user-list-item">
+    <div>
+      <div class="avatar avatar-offline">
+        <div class="letter-avatar">
+          N
+        </div>
+      </div>
+    </div>
+    <div class="users-list-body">
+      <div>
+        <h5>No hay clientes creados/activos</h5>
+        <p><span class="material-icons">check_circle</span>  {{=str(request.now)[:16]}}</p>
+      </div>
+    </div>
+  </li>   
+{{pass}}

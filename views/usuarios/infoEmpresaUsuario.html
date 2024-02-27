@@ -1,0 +1,102 @@
+<div class="slimscroll">
+    <div class="card abajoMin">
+        <div class="card-header">
+            <div class="text-center titulo">
+                <small>{{=varDatos.nombreUsers}} <br>
+                {{=varDatos.emailUsers}}</small>
+                <input type="hidden" id="usuarioSelCard" value=" {{=varDatos.idUsers}}">
+                <input type="hidden" id="usuarioSelNombre" value=" {{=varDatos.nombreUsers}}">
+                <input type="hidden" id="usuarioSelEamil" value=" {{=varDatos.emailUsers}}">
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="izquierdaFloat titulo">
+                                Listado empresas
+                            </div>
+                            {{ if userType[0] ==  'Gerente': }}
+                                <p></p>
+                            {{else:}}
+                                <div class="derechaFloat titulo">
+                                    <div class="add-section">
+                                        <a href="javascript:usus.verListadoEmpresas('{{=varDatos.idUsers}}');"><i class="fas fa-plus"></i></a>
+                                    </div>
+                                </div>
+                            {{pass}}
+                        </div>
+                        <div class="card-body">
+                            <ul class="user-list mt-2">
+                                {{if len(listadoEmpresas) > 0: }}
+                                    {{for clts in listadoEmpresas:}}
+                                        <li class="user-list-item" id='empresaAsigAsesor_{{=clts["asesores_empresas"].id_empresa}}'>
+                                            <div>
+                                                <div class="avatar avatar-online" onclick='usus.verInfoClientes( "{{=clts["asesores_empresas"].id_empresa}}","{{=str(clts["empresas"].nombre_empresa).capitalize()}}","{{=varDatos.idUsers}}" );'>
+                                                    <div class="letter-avatar">
+                                                        {{=str(clts['empresas'].nombre_empresa).capitalize()[:1]}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="users-list-body">
+                                                <div>
+                                                    <div class="izquierdaFloat">
+                                                        <h6>{{=str(clts['empresas'].nombre_empresa).capitalize()}}</h6>
+                                                        <p><span class="material-icons">check_circle</span>  {{=fechaFormato(clts['asesores_empresas'].fecha_creacion,'fecha')}} | {{=fechaFormato(clts['asesores_empresas'].hora_creacion,'hora')}}</p>
+                                                    </div>
+                                                    {{ if userType[0] ==  'Gerente': }}
+                                                        <p></p>
+                                                    {{else:}}
+                                                        <div class="derechaFloat titulo">
+                                                            <div class="derechaFloat">
+                                                                <div class="chat-action-col">
+                                                                    <a class="#" href="#" data-bs-toggle="dropdown">
+                                                                        <i class="fas fa-ellipsis-h"></i>
+                                                                    </a>
+                                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                                        <a href='javascript:usus.questionAsigEmpresa("{{=clts["asesores_empresas"].id_empresa}}","{{=varDatos.idUsers}}",1,"{{=str(clts["empresas"].nombre_empresa).capitalize()[:1]}}","{{=str(clts["empresas"].nombre_empresa).capitalize()}}");' class="dropdown-item">Desasignar <span><i class="far fa-thumbs-down"></i></span></a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {{pass}}
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {{pass}}
+                                {{else:}}
+                                    <li class="user-list-item">
+                                        <div>
+                                            <div class="avatar avatar-offline">
+                                                <div class="letter-avatar">
+                                                    N
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="users-list-body">
+                                            <div>
+                                                <h5>Sin empresas asignadas</h5>
+                                                <!-- <p><span class="material-icons">check_circle</span>  {{#=str(request.now)[:16]}}</p> -->
+                                            </div>
+                                        </div>
+                                    </li>
+                                {{pass}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="text-center titulo">
+                                Listado clientes
+                            </div>
+                        </div>
+                        <div class="card-body" id="listClientesDiv"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

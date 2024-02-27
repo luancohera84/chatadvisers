@@ -1,0 +1,72 @@
+{{#=varDatos}}
+{{#=clienteData}}
+<div class="card">
+    <div class="card-body">
+        <p aling="center"><b>Estamos en construcción....</b></p>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Identificación <span class="text-danger"></span></label>
+                    <input type="text" class="form-control" id="identificacionNuevo" name="identificacionNuevo" readonly value="{{=clienteData.identificacion}}"/>
+                    <span class="form-text text-muted">Identificación del cliente.</span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Teléfono <span class="text-danger"></span></label>
+                    <input type="text" class="form-control" id="telNuevoAct" name="telNuevoAct" placeholder="Ingrese un teléfono" readonly  value="{{=clienteData.telefono}}"/>
+                    <span class="form-text text-muted">Teléfono actual del cliente.</span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Nombres <span class="text-danger"></span></label>
+                    <input type="text" class="form-control" id="nombresNuevo" name="nombresNuevo" placeholder="Ingrese un nombre" value="{{=clienteData.name}}"/>
+                    <span class="form-text text-muted">Recuerde ingresar los nombres del cliente si cambiaron.</span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Apellidos <span class="text-danger"></span></label>
+                    <input type="text" class="form-control" id="apellidosNuevo" name="apellidosNuevo" placeholder="Ingrese apellidos" value="{{=clienteData.surname}}"/>
+                    <span class="form-text text-muted">Recuerde ingresar los apeliidos del cliente si cambiaron.</span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Teléfono nuevo<span class="text-danger"></span></label>
+                    <input type="text" class="form-control" id="telNuevo" name="telNuevo" placeholder="Ingrese un teléfono nuevo"/>
+                    <span class="form-text text-muted">Recuerde ingresar un teléfono valido.</span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Correo electronico <span class="text-danger"></span></label>
+                    <input type="email" class="form-control" id="emailNuevo" name="emailNuevo" placeholder="Ingrese un correo electronico"/>
+                    <span class="form-text text-muted">Recuerde ingresar un correo electronico valido en formato aaaaaa@sssss.com.</span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Ciudad<span class="text-danger"></span></label>
+                    <input type="text" class="form-control" id="ciudadNuevo" name="ciudadNuevo" placeholder="Ingrese una ciudad"/>
+                    <span class="form-text text-muted">Recuerde ingresar una ciudad.</span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Dirección residencia <span class="text-danger"></span></label>
+                    <input type="email" class="form-control" id="direccionNuevo" name="direccionNuevo" placeholder="Ingrese una dirección de residencia"/>
+                    <span class="form-text text-muted">Recuerde ingresar un dirección de residencia.</span>
+                </div>
+            </div>
+            <input type="hidden" id="idEmpresaN" value="{{=clienteData.empresa}}">
+            <input type="hidden" id="idCliente" value="{{=clienteData.cliente}}">
+            <input type="hidden" id="idSegmento" value="{{=clienteData.segmento}}">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="disabled btn btn-danger font-weight-bold">Limpiar formulario</button>
+        <button type="button" class=" disabled btn btn-success font-weight-bold">Guardar datos</button>
+    </div>
+</div>

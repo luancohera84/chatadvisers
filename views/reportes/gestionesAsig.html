@@ -1,0 +1,31 @@
+<table class="table" style="width:100%" id="tableGestionesAsig">
+    <div class="derechaFloat">          
+        <i class="fas fa-file-excel text-success cursor" id="ntmDescargarGestion" style="font-size:25px;text-align:center;" onclick="reps.degargarGestgion();"></i>
+    </div>
+    <thead class="borderCard">
+        <tr>
+            <th class="text-center">Cliente</th>
+            <th class="text-center">Identificación</th>
+            <th class="text-center">Télefono</th>
+            <th class="text-center">Resultado</th>
+            <th class="text-center">Fecha gestión</th>
+            <th class="text-center">Chat</th>
+        </tr>
+    </thead>
+    <tbody id="idTbodyListGestiones">
+        {{for info in infoGestiones:}}
+            <tr>
+                <td class="text-center">{{=str(info['nombre_cliente']).capitalize()}}</td>
+                <td class="text-center">{{=info['identificacion_cliente']}}</td>
+                <td class="text-center">{{=info['telefono_cliente']}}</td>
+                <td class="text-center">{{=str(info['descripcion_resultado']).capitalize()}}</td>
+                <td class="text-center">{{=info['fecha_interaccion']}} {{=info['hora_interaccion']}}</td>
+                <td class="text-center">
+                    <a href="javascript:reps.verChats('{{=info['id_info_cliente']}}','{{=str(info['nombre_cliente']).capitalize()}}','{{=info['id_empresa']}}','{{=info['telefono_cliente']}}');">
+                        <i class="fab fa-whatsapp text-success" style="font-size:17px;"></i>
+                    </a>
+                </td>
+            </tr>
+        {{pass}}
+    </tbody>
+</table> 
